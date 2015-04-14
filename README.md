@@ -1,6 +1,8 @@
 # community
 Community Sharing Repository for Carbon Black and Bit9 Platforms
 
+Your code and other files should be committed using the MIT license (http://opensource.org/licenses/MIT).
+
 
 DISCLAIMER
 
