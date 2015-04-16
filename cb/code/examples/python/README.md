@@ -8,3 +8,4 @@ Once you've installed cbapi, you can run the samples from the current directory:
 
 python -m cbcommunity.contrib.search.portable.generic_process_search -u https://127.0.0.1 -t 46c592d82e8a9ae87fe21c981a35434c12c2dc13 -q "notepad.exe"
 
+Note that these don't necessarily have to run on the Carbon Black server, but some will have to due to low-level access and other cool things that require being on the same box.
