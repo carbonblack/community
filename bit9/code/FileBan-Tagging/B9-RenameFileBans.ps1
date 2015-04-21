@@ -23,7 +23,6 @@ foreach ( $ban in $FileBan )
         {
             $ban.name = $TeamTag + $RuleName
             $json = $ban | ConvertTo-Json
-            $URLfileBan = $URLResource
-            Invoke-RestMethod -Uri $URLfileBan -Method Post -Header @{ "X-Auth-Token" = $apiKey }  -Body $json -ContentType 'application/json'
+            Invoke-RestMethod -Uri $URLResource -Method Post -Header @{ "X-Auth-Token" = $apiKey }  -Body $json -ContentType 'application/json'
         }
 }
