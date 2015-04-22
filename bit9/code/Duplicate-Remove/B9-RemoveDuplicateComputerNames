@@ -2,7 +2,7 @@ $apiKey = "Your API Key Here"
 $URLResource = "https://serverURL/api/bit9platform/v1/computer"
 $ActiveComputers = $URLResource+"?q=deleted:false"
 
-$Computers = Invoke-RestMethod -Uri $URLResource -Method Get -Header @{ "X-Auth-Token" = $apiKey } 
+$Computers = Invoke-RestMethod -Uri $ActiveComputers -Method Get -Header @{ "X-Auth-Token" = $apiKey } 
 
 $HashTable = @{}
 foreach($Computer in $Computers)
