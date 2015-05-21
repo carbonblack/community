@@ -1,0 +1,118 @@
+{
+  "feedinfo": {
+    "provider_url": "https://github.com/carbonblack/community", 
+    "display_name": "Custom Query Feed", 
+    "name": "queryfeed", 
+    "tech_data": "There are no requirements to share any data to receive this feed.", 
+    "summary": "This feed is a collection of custom search queries", 
+    "version": 1, 
+    "icon": ""
+  }, 
+  "reports": [
+    {
+      "title": "Alliance: VT Score > 8", 
+      "timestamp": 1432255234, 
+      "iocs": {
+        "query": [
+          {
+            "index_type": "events", 
+            "search_query": "cb.urlver=1&q=alliance_score_virustotal%3A%20%5B9%20TO%20%2A%5D"
+          }
+        ]
+      }, 
+      "score": 50, 
+      "link": "https://virustotal.com", 
+      "id": "f85acd18b716bb5d5239633bd5b7ff7a"
+    }, 
+    {
+      "title": "Alliance: MDL", 
+      "timestamp": 1432255234, 
+      "iocs": {
+        "query": [
+          {
+            "index_type": "events", 
+            "search_query": "cb.urlver=1&q=alliance_score_mdl%3A%2A"
+          }
+        ]
+      }, 
+      "score": 75, 
+      "link": "http://malwaredomainlist.com", 
+      "id": "a2fae82d3fdf927c557f28a57c9e6973"
+    }, 
+    {
+      "title": "Alliance: iSIGHT", 
+      "timestamp": 1432255234, 
+      "iocs": {
+        "query": [
+          {
+            "index_type": "events", 
+            "search_query": "cb.urlver=1&q=alliance_score_isight%3A%2A"
+          }
+        ]
+      }, 
+      "score": 90, 
+      "link": "https://mysight.isightpartners.com/auth/login/login", 
+      "id": "7b1f462bfef4c73f0c0daeb24f916318"
+    }, 
+    {
+      "title": "Poweliks: Run by IEX", 
+      "timestamp": 1432255234, 
+      "iocs": {
+        "query": [
+          {
+            "index_type": "events", 
+            "search_query": "cb.urlver=1&q=process_name%3Apowershell.exe%20cmdline%3Aiex"
+          }
+        ]
+      }, 
+      "score": 75, 
+      "link": "https://community.bit9.com/message/3031#3031", 
+      "id": "d9f088378470e5bec6f0747dbb94be8d"
+    }, 
+    {
+      "title": "Poweliks: Rundll32 using JS", 
+      "timestamp": 1432255234, 
+      "iocs": {
+        "query": [
+          {
+            "index_type": "events", 
+            "search_query": "cb.urlver=1&q=process_name%3Arundll32.exe%20cmdline%3A%22mshtml%2Crunhtmlapplication%22"
+          }
+        ]
+      }, 
+      "score": 75, 
+      "link": "https://community.bit9.com/message/3031#3031", 
+      "id": "a6fcf8c900569002ed88c2e16cb3c7b1"
+    }, 
+    {
+      "title": "Poweliks: PS run by Rundll32", 
+      "timestamp": 1432255234, 
+      "iocs": {
+        "query": [
+          {
+            "index_type": "events", 
+            "search_query": "cb.urlver=1&q=process_name%3Apowershell.exe%20parent_name%3Arundll32.exe"
+          }
+        ]
+      }, 
+      "score": 75, 
+      "link": "https://community.bit9.com/message/3031#3031", 
+      "id": "1c14ae43f575890e347ae15eeea0cb1d"
+    }, 
+    {
+      "title": "Poweliks: DLLHost run by PS", 
+      "timestamp": 1432255234, 
+      "iocs": {
+        "query": [
+          {
+            "index_type": "events", 
+            "search_query": "cb.urlver=1&q=process_name%3Apowershell.exe%20childproc_name%3Adllhost.exe"
+          }
+        ]
+      }, 
+      "score": 75, 
+      "link": "https://community.bit9.com/message/3031#3031", 
+      "id": "8930c35cdbc77acfec3de62821c67996"
+    }
+  ]
+}
