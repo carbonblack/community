@@ -107,6 +107,12 @@ class QueuedCbSubscriber(threading.Thread):
         self.connection.close()
 
     def process(self, poll_time_secs=1):
+        """
+        Start the thread and consume messages.
+
+        This is probably what you want to call from your main thread, and this will not return
+        until this is told to stop by someone calling stop() which sets self.go = False.
+        """
         self.start()
 
         while self.go:
