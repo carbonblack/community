@@ -1,0 +1,8 @@
+title,index_type,link,score,query
+Alliance: VT Score > 8,events,https://virustotal.com,50,alliance_score_virustotal: [9 TO *]
+Alliance: MDL,events,http://malwaredomainlist.com,75,alliance_score_mdl:*
+Alliance: iSIGHT,events,https://mysight.isightpartners.com/auth/login/login,90,alliance_score_isight:*
+Poweliks: Run by IEX,events,https://community.bit9.com/message/3031#3031,75,process_name:powershell.exe cmdline:iex
+Poweliks: Rundll32 using JS,events,https://community.bit9.com/message/3031#3031,75,"process_name:rundll32.exe cmdline:""mshtml,runhtmlapplication"""
+Poweliks: PS run by Rundll32,events,https://community.bit9.com/message/3031#3031,75,process_name:powershell.exe parent_name:rundll32.exe
+Poweliks: DLLHost run by PS,events,https://community.bit9.com/message/3031#3031,75,process_name:powershell.exe childproc_name:dllhost.exe
