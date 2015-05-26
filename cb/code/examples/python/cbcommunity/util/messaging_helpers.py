@@ -25,7 +25,7 @@
 # -----------------------------------------------------------------------------
 # Wrapper class(es) around Message Bus subscribing.
 #
-# last updated 2015-05-17 by Ben Johnson bjohnson@bit9.com
+# last updated 2015-05-25 by Ben Johnson bjohnson@bit9.com
 #
 
 import pika
@@ -122,13 +122,16 @@ class QueuedCbSubscriber(threading.Thread):
             except Queue.Empty:
                 continue
 
-    def stop(self):
+    def stop(self, wait=True):
         try:
             self.channel.stop_consuming()
             self.go = False
             self.on_stop()
         except:
             traceback.print_exc()
+
+        if wait:
+            self.join()
 
     def on_stop(self):
         """

@@ -28,7 +28,7 @@
 # TODO -- more actions wrapped, more error handling, potentially more post-processing
 # of returned results?
 #
-# last updated 2015-05-17 by Ben Johnson bjohnson@bit9.com
+# last updated 2015-05-25 by Ben Johnson bjohnson@bit9.com
 #
 
 import threading
@@ -46,7 +46,6 @@ class LiveResponseHelper(threading.Thread):
         self.session_id = None
         self.keep_alive_time = 60
         self.go = True
-#        self.lock = threading.RLock()
         self.ready_event = threading.Event()
         self.ready_event.clear()
         threading.Thread.__init__(self)
@@ -57,13 +56,18 @@ class LiveResponseHelper(threading.Thread):
         target_session = self.cb.live_response_session_create(self.sensor_id)
         self.session_id = target_session.get('id')
         while target_session.get('status') == "pending":
+            # could make this configurable to only wait certain number
+            # of seconds or at least configure how many seconds at a
+            # time to wait.
             time.sleep(5.0)
+
             target_session = self.cb.live_response_session_status(self.session_id)
             if not self.go:
                 break
 
     def __post_and_wait(self, command, command_object=None):
         resp = self.cb.live_response_session_command_post(self.session_id, command, command_object)
+        # TODO -- handle errors
         command_id = resp.get('id')
         return self.cb.live_response_session_command_get(self.session_id, command_id, wait=True)
 
@@ -77,6 +81,8 @@ class LiveResponseHelper(threading.Thread):
         while self.go:
             self.cb.live_response_session_keep_alive(self.session_id)
             for i in xrange(self.keep_alive_time):
+                # sleep for a second just to wait up to make sure we weren't
+                # told to stop
                 time.sleep(1.0)
                 if not self.go:
                     break
@@ -89,16 +95,23 @@ class LiveResponseHelper(threading.Thread):
     ###########################################################################
 
     def process_list(self):
-        # with self.lock: # overkill but shouldn't be a big performance hit
+        """
+        Returns list of dictionaries containing information about each running process.
+        """
         self.ready_event.wait()
         return self.__post_and_wait("process list").get('processes', [])
 
     def kill(self, pid):
-#        with self.lock: # overkill but shouldn't be a big performance hit
+        """
+        Kills pid on target
+        """
         self.ready_event.wait()
         return self.__post_and_wait("kill", pid)
 
     def get_file(self, filepath):
+        """
+        Returns file data for <filepath> on sensor's host.
+        """
         self.ready_event.wait()
         ret = self.__post_and_wait("get file", filepath)
         fileid = ret["file_id"]

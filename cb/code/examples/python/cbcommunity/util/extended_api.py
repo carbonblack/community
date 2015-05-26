@@ -25,7 +25,7 @@
 # -----------------------------------------------------------------------------
 # Wrapper object around CB API that extends it to add functionality
 #
-# last updated 2015-03-07 by Ben Johnson bjohnson@bit9.com
+# last updated 2015-05-25 by Ben Johnson bjohnson@bit9.com
 #
 
 from cbapi import cbapi
