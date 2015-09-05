@@ -10,8 +10,8 @@
                           (_((
 
 
-Gladius is a terminal applicaiton that allows you to go through Bit9's 'Malicious' and 'Potential Risk' file alerts.  It will check if the file is banned and if it has been seen in Carbon Black.  It will spit out links to VT and the respective locations in CB. It will prompt if you want to ban the file and ban its certificate if it has one.  For users that have more than 1 setup to manage, Gladius takes a config file with server names and API tokens so you can address alerts from both regions.  It can also do a bulk IOC check on hashes from a text file or a single hash from the prompt.
-Every analyst's life is made a bit easier when equiped with this tool.  Digesting the alerts is made easy so that more time can be spend hunting the more menacing threats. Hope this is of use :)
+Gladius is a terminal applicaiton that allows you to go through Bit9's 'Malicious' and 'Potential Risk' file alerts in a jiffy.  It will check if the file is banned and if it has been seen in Carbon Black.  It will spit out links to VT and the respective locations in CB. It will prompt if you want to ban the file and ban its certificate if it has one.  For users that have more than 1 setup to manage, Gladius takes a config file with server names and API tokens so you can address alerts from both regions.  It can also do a bulk IOC check on hashes from a text file or a single hash from the prompt.
+Every analyst's life is made a bit easier when equiped with this tool.  Digesting the alerts is made easy so that more time can be spent hunting the more menacing threats. Hope this is of use :)
 
 
 Sample:

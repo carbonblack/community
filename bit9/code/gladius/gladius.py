@@ -166,7 +166,7 @@ if __name__ == '__main__':
     launch=launchModule()
     if len(sys.argv) == 1:
         launch.show_logo4()
-        print colored.yellow("usage: ")+colored.magenta("usage: ./gladius.py -c server-info.config\n")
+        print colored.yellow("usage: ")+colored.magenta("./gladius.py -c server-info.config\n")
         sys.exit()
 
     prompt=gladiusprompt()
