@@ -1,121 +1,10 @@
 #!/usr/bin/env python
-import requests,json,sys,re
+from bit9module import *
+from cbmodule import *
 from cmd import Cmd
 from clint.textui import colored
-#pip install clint
-
-class Bit9(object):
-
-    def __init__(self):
-
-        self.b9StrongCert = True
-        self.apitoken="YOUR-API-TOKEN-HERE"
-        self.serverurl="YOUR-SERVER-URL-HERE.com/api/bit9platform/v1/"
-        self.authJson={
-         'X-Auth-Token': self.apitoken, 
-         'content-type': 'application/json'
-                      } 
-
-        self.eventurl=self.serverurl+"event"
-        self.md5url = self.serverurl+"fileCatalog?q=md5:"
-        self.sha256url = self.serverurl+"fileCatalog?q=sha256:"
-        self.fileruleurl = self.serverurl+"fileRule"
-        self.computernameurl=self.serverurl+"computer?q=name:"
-        self.computerurl=self.serverurl+"Computer/"
-        self.pathnameurl=self.serverurl+"fileInstanceGroup?q=pathName:"
-        self.certificateurl=self.serverurl+"publisher/"
-
-
-    def ban_hash(self, hashvalue, rulename):
-        print colored.yellow("[*] Banning "+ hashvalue+"...")
-        data = {'hash': hashvalue, 'fileState': 3, 'policyIds': '0', 'name': rulename}
-        r = requests.post(self.fileruleurl, json.dumps(data), headers=self.authJson, verify=self.b9StrongCert)
-        r.raise_for_status()      
-        fileRule = r.json()
-        print colored.green("[+] "+rulename+" "+hashvalue+" Banned!")
-
-
-    def ban_certificate(self, hashstate):
-        print colored.yellow("[*] Banning certificate for "+hashstate[0]['publisher']+"...")
-        data = {'publisherState': 3}
-        r = requests.put(self.certificateurl+str(hashstate[0]['publisherId']), json.dumps(data), headers=self.authJson, verify=self.b9StrongCert)
-        r.raise_for_status()      
-        fileRule = r.json() 
-        print colored.green("[+] "+hashstate[0]['publisher']+" certificate has been Banned!")               
-
-
-    def find_computer(self, computername):
-        r = requests.get(self.computernameurl+computername, headers=self.authJson, verify=self.b9StrongCert)
-        r.raise_for_status()
-        result = r.json()
-        return result
-
-
-    def tag_computer(self, computername, description, computertag):
-        result = self.find_computer(computername)
-        computerid = str(result[0]['id'])
-
-        data = {'description':description, 'computerTag': computertag}
-        r = requests.put(self.computerurl+computerid, json.dumps(data), headers=self.authJson, verify=self.b9StrongCert)
-        r.raise_for_status()
-        result = r.json()
-
-    #not finished    
-    def computer_with_path(self, pathname):
-        r = requests.get(self.pathnameurl+pathname, headers=self.authJson, verify=self.b9StrongCert)
-        r.raise_for_status()
-        result = r.json()
-        print result   
-
-
-    def check_hash(self,hashtype,value):
-        if hashtype=="md5":
-            hashurl=self.md5url
-
-        if hashtype=="sha1":
-            hashurl=self.sha1url
-
-        if hashtype=="sha256":
-            hashurl=self.sha256url
-
-        r = requests.get(hashurl+value, headers=self.authJson, verify=self.b9StrongCert)
-        r.raise_for_status()
-        result = r.json()
-        return result
-
-
-    def event(self, term, value, limit):
-        r = requests.get(self.eventurl+"?q="+term+":"+value+"&limit="+limit+"&sort=receivedTimestamp%20DESC", headers=self.authJson, verify=self.b9StrongCert)
-        r.raise_for_status()
-        result = r.json()
-        return result
-
-    #evaluate current state of a hash, check its effectiveState, prompt to be banned if not, prompt for publisher ban if it has one
-    def eval_hash_state(self, hashstate):
-        if hashstate[0]['effectiveState']!='Banned':
-            print colored.cyan("https://www.virustotal.com/latest-report.html?resource="+str(hashstate[0]['md5']))             
-            print colored.magenta("[?] "+hashstate[0]['fileName']+" is not Banned, shall we?")
-            userinput=get_user_input()
-            if userinput==True:
-                bit9.ban_hash(hashstate[0]['md5'], hashstate[0]['fileName'])
-            if userinput==False:
-                print colored.yellow("[*] Okay then, not banning the hash.")
-
-            if hashstate[0]['publisherState']>0:
-                print colored.magenta("[?] "+hashstate[0]['fileName']+" also has a publisher, "+hashstate[0]['publisher']+" shall we Ban it?")
-                userinput=get_user_input()
-                if userinput==True:
-                    bit9.ban_certificate(hashstate)
-
-                if userinput==False:
-                    print colored.yellow("[*] Okay then, not banning the Certificate.")
-        else:
-            if hashstate[0]['fileName']==None:
-                print colored.yellow("[*] Hash "+str(hashstate[0]['md5'])+" is Banned but has no File Name, "+"https://www.virustotal.com/latest-report.html?resource="+str(hashstate[0]['md5']))
-            else:
-                print colored.yellow("[*] "+hashstate[0]['fileName']+" is "+hashstate[0]['effectiveState']+", https://www.virustotal.com/latest-report.html?resource="+str(hashstate[0]['md5']))
-
-
+import os,argparse
+from launchmodule import *
 
 def get_user_input():
     userinput=raw_input("y/n/q: ")
@@ -143,7 +32,7 @@ def srs_malicious_events():
             match = re.match(r"^.*\[(.*)\].*$",event['description'])
             sha256=match.group(1)
             hashstate=bit9.check_hash("sha256", sha256)
-            bit9.eval_hash_state(hashstate)
+            bit9.eval_hash_state(hashstate, event)
     print colored.green("[+] Our work here is done, check again soon.")
 
 def srs_potential_risk_events():
@@ -157,23 +46,24 @@ def srs_potential_risk_events():
             match = re.match(r"^.*\[(.*)\].*$",event['description'])
             sha256=match.group(1)
             hashstate=bit9.check_hash("sha256", sha256)
-            bit9.eval_hash_state(hashstate)
+            bit9.eval_hash_state(hashstate,event)
     print colored.green("[+] Our work here is done, check again soon.")
 
-#not finished
+
 def fireye_malicious_events():
+    #NOT FINISHED
     events=bit9.event("subtype", str(1200), limit)
     print colored.green("[+] Checking FireEye Malicious File Alerts.")
     for event in events:
-        if event['description'].endswith(" was identified by Bit9 Software Reputation Service as a potential risk."):
+        if event['description'].endswith(" was identified by FIREEYE."):
             print colored.red("[-] "+event['description'])
             match = re.match(r"^.*\[(.*)\].*$",event['description'])
             md5=match.group(1)
 
-#used for getting hash state info
-def get_hash_state():
-    print colored.magenta("[?] Paste in the MD5, SHA-1 or SHA256 hash:")
-    hashvalue=raw_input().strip(" ")
+
+def hash_lookup(hashvalue):
+    #used for getting hash state info
+    #if it exists, prompt to ban, if it does not, prompt to ban pre-emptively
     if len(hashvalue)==32:
         print colored.yellow("[*] MD5 Detected.")
         hashtype="md5"
@@ -186,35 +76,44 @@ def get_hash_state():
     
     print colored.yellow("[*] Checking "+str(hashvalue))
     hashstate=bit9.check_hash(hashtype, hashvalue)
-
     if len(hashstate)==0:
-        print colored.yellow("[-] Hash does not exist in our envirnment")
-        print colored.magenta("[?] Would you like to ban this Hash?")
-        userinput=get_user_input()
-        if userinput==True:
-            bit9.ban_hash(hashvalue,"Pre-emptive Hash Ban")
-        if userinput==False:
-            print colored.yellow("[*] Okay, not banning the Hash.")
+        print colored.cyan("[?] Hash not found in Bit9.")
+        cb.check_execution(str(hashvalue))
+        pass
+
     else:
-        bit9.eval_hash_state(hashstate)
-        print colored.green("[+] Hash checking complete.")
+        if hashstate[0]['effectiveState']!='Banned':
+            print colored.yellow("[*] Hash is not Banned")
+            cb.check_execution(hashstate[0]['md5'])
+            print colored.cyan("https://www.virustotal.com/latest-report.html?resource="+str(hashstate[0]['sha256']))
+            print colored.cyan("[i] Prevalence: "+str(hashstate[0]['prevalence']))
+            print colored.cyan("[?] File Name: "+str(hashstate[0]['fileName']))
+            print colored.cyan("[?] Path: "+str(hashstate[0]['pathName']))
+            try:
+                print colored.magenta("[?] "+str(hashstate[0]['fileName'])+" is not Banned, shall we?")
+            except:
+                print colored.yellow("[*] Can't print filename, strange characters.")
+                pass
+            userinput=get_user_input()
+            if userinput==True:
+                bit9.ban_hash(hashstate[0]['sha256'], hashstate[0]['fileName'])
+            if userinput==False:
+                print colored.yellow("[*] Okay then, not banning the hash.")
 
+            if hashstate[0]['publisherState']>0:
+                print colored.magenta("[?] "+hashstate[0]['fileName']+" also has a publisher, "+hashstate[0]['publisher']+" shall we Ban it?")
+                userinput=get_user_input()
+                if userinput==True:
+                    bit9.ban_certificate(hashstate)
 
-def show_logo2():
-
-    print colored.cyan("""
-           |`-._/\_.-`|    1 = 'Malicious File'
-           |    ||    |    2 = 'Potential Risk File'
-           |___o()o___|    3 = FireEye 'Malicious File'
-           |__((<>))__|    4 = Hash
-           \   o\/o   /    5 = Certificate
-            \   ||   /     0 = Quit
-             \  ||  /      
-              '.||.'       noah.corradin
-                ``
-
-        """)
-
+                if userinput==False:
+                    print colored.yellow("[*] Okay then, not banning the Certificate.")
+        else:
+            print colored.yellow("[*] Hash is banned.")
+            print colored.magenta("[?] Check Carbon Black?")
+            userinput=get_user_input()
+            if userinput==True:
+                cb.check_execution(hashstate[0]['md5'])
 
 class gladiusprompt(Cmd):
 
@@ -223,30 +122,62 @@ class gladiusprompt(Cmd):
         raise SystemExit
 
     def do_1(self, args):
+        #check X amount of most recent SRS 'Malicious File' events
         srs_malicious_events()
-        show_logo2()
+        launch.show_logo4()
 
     def do_2(self, args):
+        #check X amount of most recent SRS 'Potential Risk File' events
         srs_potential_risk_events()
-        show_logo2()
+        launch.show_logo4()
 
-    #not finished
+    #NOT FINISHED
     def do_3(self, args):
+        #check X amount of most recent FireEye 'Malicious File' events
         fireye_malicious_events()
-        print "I'm doin2"
+        launch.show_logo4()
 
     def do_4(self, args):
-        get_hash_state()
-        show_logo2()
+        #check your environment for a single hash or a text file of newline seperated hashes
+        print colored.magenta("[?] Hash(1) or Text File(2) ?: ")
+        userinput=int(raw_input())
+        if userinput==1:
+            print colored.magenta("[?] Paste in the MD5, SHA-1 or SHA256 hash:")
+            hashuserinput=raw_input()
+            hash_lookup(hashuserinput.rstrip())
 
-    #not finished    
+        if userinput==2:
+            print colored.magenta("[+] Enter path of text file location: ")
+            userfilepath=raw_input()
+            if os.path.isfile(os.path.abspath(userfilepath)) == False:
+                print colored.red("[-] "+userfilepath+" does not exist")
+            else:
+                for hashvalue in open(userfilepath):
+                    hash_lookup(hashvalue.rstrip())
+        launch.show_logo4()
+
+    #NOT FINISHED
     def do_5(self, args):
+        #check your environment for the publisherName of a certificate
         get_certificate_state()
-        print "I'm doin2"
+        launch.show_logo4()
 
 if __name__ == '__main__':
+    launch=launchModule()
+    if len(sys.argv) == 1:
+        launch.show_logo4()
+        print colored.yellow("usage: ")+colored.magenta("./gladius.py -c server-info.config\n")
+        sys.exit()
+
     prompt=gladiusprompt()
-    bit9=Bit9()
-    show_logo2()
+    args = launch.get_args()
+
+
+    cbserverurl,cbapitoken,b9serverurl,b9apitoken=launch.load_cb_config(args.configfile)
+
+    cb=CB(cbserverurl, cbapitoken)
+    bit9=Bit9(b9serverurl,b9apitoken,cb)
+
+    launch.show_logo2()
     prompt.prompt = 'Gladius>'
     prompt.cmdloop()
