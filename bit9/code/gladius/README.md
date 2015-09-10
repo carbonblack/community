@@ -2,18 +2,18 @@ Gladius is a terminal applicaiton that allows you to go through Bit9's 'Maliciou
 Every analyst's life is made a bit easier when equiped with this tool.  Digesting the alerts is made easy so that more time can be spent hunting the more menacing threats. Hope this is of use :)
 
 
-Sample:
-[+] Checking Malicious File Alerts.
-[-] File 'install_temp.exe' [524d9d692a4438b27a6c371f03e47c93b6cf1744815bf8c50b57fa329f6c5d2d] was identified by Bit9 Software Reputation Service as a malicious file.
-[*] Hash is not Banned
-[*] Checking if Parent MD5 process in Carbon Black...
-[+] Not a Parent MD5 process
-[*] Checking if MD5 seen in Carbon Black...
-[+] MD5 Found in CB.
-https://CB-SERVER.com\#search/cb.urlver=1&cb.q.md5=%20213d85f79445b133e011c2cd318f6a6f&sort=&rows=10&start=0
-https://www.virustotal.com/latest-report.html?resource=524d9d692a4438b27a6c371f03e47c93b6cf1744815bf8c50b57fa329f6c5d2d
-[i] Prevalence: 1
-[i] Path: c:\users\USER\appdata\local\temp
-[i] Hostname: ADS\HOSTNAME
-[?] install_temp.exe is not Banned, shall we?
-y/n/q: 
+Sample:<br/>
+[+] Checking Malicious File Alerts.<br/>
+[-] File 'install_temp.exe' [524d9d692a4438b27a6c371f03e47c93b6cf1744815bf8c50b57fa329f6c5d2d] was identified by Bit9 Software Reputation Service as a malicious file.<br/>
+[+] Hash is not Banned<br/>
+[+] Checking if Parent MD5 process in Carbon Black...<br/>
+[+] Not a Parent MD5 process<br/>
+[+] Checking if MD5 seen in Carbon Black...<br/>
+[+] MD5 Found in CB.<br/>
+hxxps://CB-SERVER.com\#search/cb.urlver=1&cb.q.md5=%20213d85f79445b133e011c2cd318f6a6f&sort=&rows=10&start=0<br/>
+hxxps://www.virustotal.com/latest-report.html?resource=524d9d692a4438b27a6c371f03e47c93b6cf1744815bf8c50b57fa329f6c5d2d<br/>
+[i] Prevalence: 1<br/>
+[i] Path: c:\users\USER\appdata\local\temp<br/>
+[i] Hostname: ADS\HOSTNAME<br/>
+[?] install_temp.exe is not Banned, shall we?<br/>
+y/n/q: <br/>
