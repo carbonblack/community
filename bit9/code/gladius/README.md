@@ -17,3 +17,51 @@ hxxps://www.virustotal.com/latest-report.html?resource=524d9d692a4438b27a6c371f0
 [i] Hostname: ADS\HOSTNAME
 [?] install_temp.exe is not Banned, shall we?
 y/n/q: 
+
+
+               +----------------------+              
+               |Bit9 Malicious File   |              
+               |or Potential Risk File|              
+               +----------+-----------+              
+                          |                          
+                      +---v---+                      
+               |------+Banned?+-------|              
+               |      +-------+       |              
+             +-++                   +-+-+            
+             |No|                   |Yes|            
+             +-++                   +-+-+            
+               |                      |              
+         +-----v----+           +-----v----+         
+         |parent_md5|           |parent_md5|         
+Check CB |    md5   |           |    md5   | Check CB
+         +-----+----+           +-----+----+         
+               |                      |              
+        Return |                      | Return       
+               |                      |              
+            +--v--+                +--v--+           
+            |Links|                |Links+------+    
+            +--+--+                +-----+      |    
+               |                                |    
+               |                                |    
+            +--v-+                              |    
+        +---+Ban?+-----+                        |    
+        |   +----+     |                        |    
+        |              |                        |    
+      +-v+           +-v-+                      |    
+  +---+No|           |Yes|                      |    
+  |   +--+           +-+-+                      |    
+  |                    |                        |    
+  |                  +-v-+                      |    
+  |                  |Ban|                      |    
+  |                  +-+-+                      |    
+  |                    |                        |    
+  |              +-----v------+                 |    
+  |       +------+Certificate?+-----+           |    
+  |  Ban? |      +------------+     | Ban?      |    
+  |       |                         |           |    
+  |     +-v+                      +-v-+         |    
+  |     |No|                      |Yes|         |    
+  |     +-++                      +-+-+         |    
+  |       |       +----------+      |           |    
+  +-------+------->Next Alert<------+-----------+    
+                  +----------+                    
