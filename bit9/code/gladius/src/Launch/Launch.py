@@ -2,10 +2,10 @@ import argparse
 from clint.textui import colored
 
 
-class launchModule(object):
+class Launch(object):
     
   def get_args(self):
-      parser = argparse.ArgumentParser(description='Terminal application for remediating Bit9 alerts in a jiffy.')
+      parser = argparse.ArgumentParser(description='Terminal application for remediating Bit9 alerts in a Jiffy.')
       parser.add_argument('-c','--config-file', action='store', dest="configfile", help="Config file for Carbon Black and Bit9 settings.", required=True)
       args = parser.parse_args()
       return args
@@ -17,8 +17,8 @@ class launchModule(object):
           cbapitoken=str(cfile[1].rstrip())
           b9serverurl=str(cfile[2].rstrip())
           b9apitoken=str(cfile[3].rstrip())
-          print colored.magenta("Carbon Black Server = "+cbserverurl)
-          print colored.magenta("Bit9 Server = "+b9serverurl+"\n")
+
+          print colored.green("[+] Completed.\n")
           return (cbserverurl,cbapitoken,b9serverurl,b9apitoken)
 
 
@@ -47,16 +47,17 @@ class launchModule(object):
     ``````````````````````````````````
           """)
 
-  def show_logo2(self):
+  @staticmethod
+  def show_logo2():
 
       print colored.cyan("""
              |`-._/\_.-`|    1 = 'Malicious File'
              |    ||    |    2 = 'Potential Risk File'
-             |___o()o___|    3 = FireEye 'Malicious File' (not finished)
+             |___o()o___|    3 = FireEye 'Malicious File'
              |__((<>))__|    4 = Hash
              \   o\/o   /    5 = Certificate (not finished)
-              \   ||   /     0 = Quit
-               \  ||  /      
+              \   ||   /     6 = Computer lookup
+               \  ||  /      0 = Exit
                 '.||.'       
                   ``
           """)
@@ -107,4 +108,3 @@ class launchModule(object):
 
 
       """)
-    pass
