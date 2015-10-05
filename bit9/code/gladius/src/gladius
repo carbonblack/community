@@ -5,17 +5,15 @@ from Launch.Launch import Launch
 from Prompt.Prompt import Prompt
 
 if __name__ == "__main__":
-	launch=Launch()
 	prompt=Prompt()
+	launch=Launch()
 
 	if len(sys.argv) == 1:
-		launch.show_logo4()
+		Launch.show_logo4()
 		print colored.yellow("usage: ")+colored.magenta("./gladius -c server-info.config\n")
 		sys.exit()
 
 	args=launch.get_args()
-	#cbserverurl,cbapitoken,b9serverurl,b9apitoken=launch.load_cb_config(args.configfile)
-	#bit9=Bit9(b9serverurl,b9apitoken)
 	launch.show_logo2()
 	prompt.prompt = 'Gladius>'
 	prompt.cmdloop()

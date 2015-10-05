@@ -11,15 +11,22 @@ class Launch(object):
       return args
 
   def load_cb_config(self,configile):
-          print colored.yellow("[*] Loading config file.")
+          #print colored.yellow("[*] Loading config file.")
           cfile= open(configile, "r").readlines()
           cbserverurl=str(cfile[0].rstrip())
           cbapitoken=str(cfile[1].rstrip())
           b9serverurl=str(cfile[2].rstrip())
           b9apitoken=str(cfile[3].rstrip())
 
-          print colored.green("[+] Completed.\n")
-          return (cbserverurl,cbapitoken,b9serverurl,b9apitoken)
+          #print colored.green("[+] Completed.\n")
+          return (cbserverurl,cbapitoken)
+
+  def load_b9_config(self,configile):
+          cfile= open(configile, "r").readlines()
+          b9serverurl=str(cfile[2].rstrip())
+          b9apitoken=str(cfile[3].rstrip())
+          return (b9serverurl,b9apitoken)
+
 
 
   def show_logo(self):

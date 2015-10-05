@@ -3,8 +3,10 @@ from Modules.MaliciousFileEvents import MaliciousFileEvents
 from Modules.PotentialRiskFileEvents import PotentialRiskFileEvents
 from Modules.FireEyeEvents import FireEyeEvents
 from Modules.HashLookup import HashLookup
+from Modules.ComputerLookup import ComputerLookup
 from clint.textui import colored
 from Launch.Launch import Launch
+import os
 
         
 class Prompt(Cmd):
@@ -73,5 +75,8 @@ class Prompt(Cmd):
         #Check if computers from list have Bit9 and/or CB installed
         print colored.magenta("[+] Enter palth of text file: ")
         usercomputerfile=raw_input()
-        computer_lookup(usercomputerfile)
-        launch.show_logo2()
+        if os.path.isfile(os.path.abspath(usercomputerfile)) == False:
+            print colored.red("[-] "+usercomputerfile+" does not exist")
+        else:  
+            ComputerLookup(usercomputerfile)
+        Launch.show_logo2()

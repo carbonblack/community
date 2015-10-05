@@ -24,4 +24,3 @@ class HashLookup(object):
             cb.check_execution(str(hashvalue))
             pass
         EvalHashState.Run(hashstate, event=None)
-        print colored.green("[+] Our work here is done, check again soon.")

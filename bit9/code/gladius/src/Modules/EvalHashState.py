@@ -3,18 +3,21 @@ from Carbonblack.CheckExecution import CheckExecution
 from Modules.GetUserInput import GetUserInput
 from Bit9.BanHash import BanHash
 from Bit9.BanCertificate import BanCertificate
+from Launch.Launch import Launch
 
 class EvalHashState(object):
 
     @staticmethod
     def Run(hashstate,event):
+        launch=Launch()
+        args=launch.get_args()
+        b9serverurl,b9apitoken=launch.load_b9_config(args.configfile)
         authJson={
-         'X-Auth-Token': "30FC583B-8D49-4EE9-B34C-D7612C82898C", 
+         'X-Auth-Token': b9apitoken, 
          'content-type': 'application/json'
                       }
-        serverurl="https://chimeraus.autodesk.com"+str("/api/bit9platform/v1/")
+        serverurl=b9serverurl+str("/api/bit9platform/v1/")
         b9StrongCert=True
-
         if event==None:
             if hashstate[0]['effectiveState']!='Banned':
                 print colored.yellow("[*] Hash is not Banned")
@@ -28,17 +31,17 @@ class EvalHashState(object):
                 except:
                     print colored.yellow("[*] Can't print filename, strange characters.")
                     pass
-                userinput=get_user_input()
+                userinput=GetUserInput.Run()
                 if userinput==True:
-                    bit9.ban_hash(hashstate[0]['sha256'], hashstate[0]['fileName'])
+                    BanHash.Run(hashstate[0]['sha256'], hashstate[0]['fileName'])
                 if userinput==False:
                     print colored.yellow("[*] Okay then, not banning the hash.")
 
                 if hashstate[0]['publisherState']>0:
                     print colored.magenta("[?] "+hashstate[0]['fileName']+" also has a publisher, "+hashstate[0]['publisher']+" shall we Ban it?")
-                    userinput=get_user_input()
+                    userinput=GetUserInput.Run()
                     if userinput==True:
-                        bit9.ban_certificate(hashstate)
+                        BanCertificate.Run(hashstate)
 
                     if userinput==False:
                         print colored.yellow("[*] Okay then, not banning the Certificate.")

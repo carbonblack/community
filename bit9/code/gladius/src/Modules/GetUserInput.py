@@ -1,3 +1,4 @@
+from clint.textui import colored
 
 class GetUserInput(object):
 

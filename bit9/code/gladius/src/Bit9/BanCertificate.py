@@ -1,16 +1,19 @@
 import requests,json
 from clint.textui import colored
+from Launch.Launch import Launch
 
 class BanCertificate(object):
 
 	@staticmethod
 	def Run(hashstate):
+		launch=Launch()
+		args=launch.get_args()
+		b9serverurl,b9apitoken=launch.load_b9_config(args.configfile)
 		authJson={
-		'X-Auth-Token': "30FC583B-8D49-4EE9-B34C-D7612C82898C", 
+		'X-Auth-Token': b9apitoken, 
 		'content-type': 'application/json'
 		}
-		serverurl="https://chimeraus.autodesk.com"+str("/api/bit9platform/v1/")
-		certificateurl=serverurl+"publisher/"
+		serverurl=b9serverurl+str("/api/bit9platform/v1/")
 		b9StrongCert=True
 		print colored.yellow("[*] Banning certificate for "+hashstate[0]['publisher']+"...")
 		data = {'publisherState': 3}

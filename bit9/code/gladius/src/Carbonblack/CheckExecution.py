@@ -1,17 +1,18 @@
 import cbapi
 from clint.textui import colored
+from Launch.Launch import Launch
 
 class CheckExecution(object):
 
     @staticmethod
     def Run(md5):
-
-        serverurl="https://minotaurus.autodesk.com:8443"
-        apitoken="1320d247d2047aef8895521dfd46221b8fed703f"
-        parentmd5url=serverurl+str("\#search/cb.urlver=1&cb.q.parent_md5=%20")
-        md5url=serverurl+str("\#search/cb.urlver=1&cb.q.md5=%20")
-        cb = cbapi.CbApi(serverurl,
-             token=apitoken,
+        launch=Launch()
+        args=launch.get_args()
+        cbserverurl,cbapitoken=launch.load_cb_config(args.configfile)
+        parentmd5url=cbserverurl+str("\#search/cb.urlver=1&cb.q.parent_md5=%20")
+        md5url=cbserverurl+str("\#search/cb.urlver=1&cb.q.md5=%20")
+        cb = cbapi.CbApi(cbserverurl,
+             token=cbapitoken,
              ssl_verify=False)
 
         parentquery='parent_md5:'+md5
