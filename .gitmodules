@@ -1,3 +1,9 @@
 [submodule "PHP-Api"]
 	path = cb/api_bindings/php_api
 	url = https://github.com/javabudd/CbApi.git
+[submodule "bit9/code/Gladius"]
+	path = bit9/code/Gladius
+	url = https://github.com/droptables/Gladius.git
+[submodule "cb/CarbonGraphiti"]
+	path = cb/CarbonGraphiti
+	url = https://github.com/droptables/CarbonGraphiti.git
