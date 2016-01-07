@@ -6,7 +6,7 @@ import time
 from cbapi.util.cli_helpers import main_helper
 
 """
-Exports watchlists into a sharable format for readying by a human and importable by a script
+Exports watchlists into a sharable format that's readable by a script or human
 """
 
 class Export():
@@ -46,7 +46,7 @@ class Export():
             url = urllib.unquote(self.args.get('server_url') + '?' + watch_list.get('search_query'))
             parsed = urlparse.urlparse(url)
             for parameter, value in urlparse.parse_qs(parsed.query).iteritems():
-                 # make things like 'cb.q.netconn_count' turn into 'netconn_count:'
+                # make things like 'cb.q.netconn_count' turn into 'netconn_count:'
                 if 'cb.q.' in parameter:
                     search_param = parameter.replace('cb.q.', '')
                     search_string += u' ' + search_param + u': ' + value[0]
