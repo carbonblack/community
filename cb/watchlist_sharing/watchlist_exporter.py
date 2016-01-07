@@ -49,7 +49,7 @@ class Export():
                 # make things like 'cb.q.netconn_count' turn into 'netconn_count:'
                 if 'cb.q.' in parameter:
                     search_param = parameter.replace('cb.q.', '')
-                    search_string += u' ' + search_param + u': ' + value[0]
+                    search_string += u' ' + search_param + u':' + value[0]
                 # If it's "&q=" then we don't need to do any special formatting
                 if parameter == 'q':
                     search_string += u' ' + value[0]
