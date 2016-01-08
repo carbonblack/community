@@ -2,7 +2,7 @@ import cbapi
 import urlparse
 import urllib
 import json
-import time
+import datetime
 from cbapi.util.cli_helpers import main_helper
 
 """
@@ -65,7 +65,7 @@ class Export():
     def export_watchlists(self):
         export = {
             "Author": "Fill in author",
-            "ExportDate": time.strftime("%D %H:%M:%S"),
+            "ExportDate": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
             "ExportDescription": "Fill in description",
             "Watchlists": self.watch_lists,
         }
