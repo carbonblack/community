@@ -3,7 +3,11 @@ import logging
 import cbapi
 import json
 import urllib
-from cbapi.util.cli_helpers import main_helper
+try:
+    from cbapi.util.cli_helpers import main_helper
+except ImportError:
+    from cbapi.legacy.util.cli_helpers import main_helper
+
 
 """
 Imports the output from watchlist exporter
