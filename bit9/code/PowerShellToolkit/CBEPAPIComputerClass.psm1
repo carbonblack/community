@@ -11,7 +11,7 @@
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #>
 
-# This class is for creating a CBEP object that encompasses a Computer, the approval requests from that computer, and the files associated with the approval requests
+# This class is for creating a CBEP object that holds computer information
 # If also includes the methods needed to manipulate the data to send to the API
 class CBEPComputer{
     [system.object]$computers
@@ -22,7 +22,7 @@ class CBEPComputer{
     [void] GetComputer ([string]$computerName, [system.object]$session){
         $urlQueryPart = "/Computer?q=name:*" + $computerName + "*&q=deleted:false"
         $tempComputer = $session.getQuery($urlQueryPart)
-        If ($this.requests){
+        If ($this.computers){
             $i = 0
             While ($i -le $this.computers.length){
                 If ($this.computers[$i].id -eq $tempComputer.id){
