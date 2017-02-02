@@ -24,8 +24,8 @@ class CBEPFile{
         $urlQueryPart = "/fileCatalog?q=id:" + $fileCatalogId
         $tempFile = $session.getQuery($urlQueryPart)
         If ($this.fileCatalog){
-            $i = 1
-            While ($i -le $this.fileCatalog.length){
+            $i = 0
+            While ($i -lt $this.fileCatalog.length){
                 If ($this.fileCatalog[$i].id -eq $tempFile.id){
                     $this.fileCatalog[$i] = $tempFile
                     return
@@ -44,8 +44,8 @@ class CBEPFile{
         $urlQueryPart = "/fileInstance?q=fileCatalogId:" + $fileCatalogId + "&q=computerId:" + $computerId
         $tempFile = $session.getQuery($urlQueryPart)
         If ($this.fileInstance){
-            $i = 1
-            While ($i -le $this.fileInstance.length){
+            $i = 0
+            While ($i -lt $this.fileInstance.length){
                 If ($this.fileInstance[$i].id -eq $tempFile.id){
                     $this.fileInstance[$i] = $tempFile
                     return
@@ -63,8 +63,8 @@ class CBEPFile{
     [void] UpdateFileLocal ([string]$fileInstanceId, [system.object]$session){
         If ($this.fileInstance){
             $urlQueryPart = "/fileInstance?q=id:" + $fileInstanceId
-            $i = 1
-            While ($i -le $this.fileInstance.length){
+            $i = 0
+            While ($i -lt $this.fileInstance.length){
                 If ($this.fileInstance[$i].id -eq $fileInstanceId){
                     $jsonObject = ConvertTo-Json -InputObject $this.fileInstance[$i]
                     $this.fileInstance[$i] = $session.postQuery($urlQueryPart, $jsonObject)
@@ -80,8 +80,8 @@ class CBEPFile{
     [void] UpdateFileGlobal ([string]$fileCatalogId, [system.object]$session){
         If ($this.fileCatalog){
             $urlQueryPart = "/fileCatalog?q=id:" + $fileCatalogId
-            $i = 1
-            While ($i -le $this.fileCatalog.length){
+            $i = 0
+            While ($i -lt $this.fileCatalog.length){
                 If ($this.fileCatalog[$i].id -eq $fileCatalogId){
                     $jsonObject = ConvertTo-Json -InputObject $this.fileCatalog[$i]
                     $this.fileCatalog[$i] = $session.postQuery($urlQueryPart, $jsonObject)
