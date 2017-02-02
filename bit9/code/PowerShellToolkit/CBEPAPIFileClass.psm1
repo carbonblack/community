@@ -24,7 +24,7 @@ class CBEPFile{
         $urlQueryPart = "/fileCatalog?q=id:" + $fileCatalogId
         $tempFile = $session.getQuery($urlQueryPart)
         If ($this.fileCatalog){
-            $i = 0
+            $i = 1
             While ($i -le $this.fileCatalog.length){
                 If ($this.fileCatalog[$i].id -eq $tempFile.id){
                     $this.fileCatalog[$i] = $tempFile
@@ -44,7 +44,7 @@ class CBEPFile{
         $urlQueryPart = "/fileInstance?q=fileCatalogId:" + $fileCatalogId + "&q=computerId:" + $computerId
         $tempFile = $session.getQuery($urlQueryPart)
         If ($this.fileInstance){
-            $i = 0
+            $i = 1
             While ($i -le $this.fileInstance.length){
                 If ($this.fileInstance[$i].id -eq $tempFile.id){
                     $this.fileInstance[$i] = $tempFile
@@ -63,7 +63,7 @@ class CBEPFile{
     [void] UpdateFileLocal ([string]$fileInstanceId, [system.object]$session){
         If ($this.fileInstance){
             $urlQueryPart = "/fileInstance?q=id:" + $fileInstanceId
-            $i = 0
+            $i = 1
             While ($i -le $this.fileInstance.length){
                 If ($this.fileInstance[$i].id -eq $fileInstanceId){
                     $jsonObject = ConvertTo-Json -InputObject $this.fileInstance[$i]
@@ -80,7 +80,7 @@ class CBEPFile{
     [void] UpdateFileGlobal ([string]$fileCatalogId, [system.object]$session){
         If ($this.fileCatalog){
             $urlQueryPart = "/fileCatalog?q=id:" + $fileCatalogId
-            $i = 0
+            $i = 1
             While ($i -le $this.fileCatalog.length){
                 If ($this.fileCatalog[$i].id -eq $fileCatalogId){
                     $jsonObject = ConvertTo-Json -InputObject $this.fileCatalog[$i]
