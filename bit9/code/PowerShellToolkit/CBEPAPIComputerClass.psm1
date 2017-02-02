@@ -23,7 +23,7 @@ class CBEPComputer{
         $urlQueryPart = "/Computer?q=name:*" + $computerName + "*&q=deleted:false"
         $tempComputer = $session.getQuery($urlQueryPart)
         If ($this.computers){
-            $i = 0
+            $i = 1
             While ($i -le $this.computers.length){
                 If ($this.computers[$i].id -eq $tempComputer.id){
                     $this.computers[$i] = $tempComputer
@@ -41,7 +41,7 @@ class CBEPComputer{
     [void] UpdateComputer ([string]$computerID, [system.object]$session){
         If ($this.computers){
             $urlQueryPart = "/Computer?q=id" + $computerID
-            $i = 0
+            $i = 1
             While ($i -le $this.computers.length){
                 If ($this.computers[$i].id -eq $computerID){
                     $jsonObject = ConvertTo-Json -InputObject $this.computers[$i]
