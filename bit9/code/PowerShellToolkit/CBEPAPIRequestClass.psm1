@@ -27,7 +27,7 @@ class CBEPRequest{
             $tempRequest = $session.getQuery($urlQueryPart)
             If ($this.requests){
                 $i = 0
-                While ($i -le $this.requests.length){
+                While ($i -lt $this.requests.length){
                     If($this.requests[$i].id -eq $tempRequest.id){
                         $this.requests[$i] = $tempRequest
                         return
@@ -51,7 +51,7 @@ class CBEPRequest{
         $urlQueryPart = "/approvalRequest/"
         If ($this.requests){
             $i = 0
-            While ($i -le $this.requests.length){
+            While ($i -lt $this.requests.length){
                 If ($this.requests[$i].id -eq $requestID){
                     $jsonObject = ConvertTo-Json -InputObject $this.requests[$i]
                     $this.requests[$i] = $session.postQuery($urlQueryPart, $jsonObject)

@@ -24,7 +24,7 @@ class CBEPComputer{
         $tempComputer = $session.getQuery($urlQueryPart)
         If ($this.computers){
             $i = 0
-            While ($i -le $this.computers.length){
+            While ($i -lt $this.computers.length){
                 If ($this.computers[$i].id -eq $tempComputer.id){
                     $this.computers[$i] = $tempComputer
                     return
@@ -42,7 +42,7 @@ class CBEPComputer{
         If ($this.computers){
             $urlQueryPart = "/Computer?q=id" + $computerID
             $i = 0
-            While ($i -le $this.computers.length){
+            While ($i -lt $this.computers.length){
                 If ($this.computers[$i].id -eq $computerID){
                     $jsonObject = ConvertTo-Json -InputObject $this.computers[$i]
                     $this.computers[$i] = $session.postQuery($urlQueryPart, $jsonObject)
