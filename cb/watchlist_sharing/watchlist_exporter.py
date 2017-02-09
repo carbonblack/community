@@ -3,7 +3,11 @@ import urlparse
 import urllib
 import json
 import datetime
-from cbapi.util.cli_helpers import main_helper
+try:
+    from cbapi.util.cli_helpers import main_helper
+except ImportError:
+    from cbapi.legacy.util.cli_helpers import main_helper
+
 
 """
 Exports watchlists into a sharable format that's readable by a script or human
