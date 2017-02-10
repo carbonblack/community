@@ -19,4 +19,6 @@ $object.GetSomethingCool('variable1','variable2','variable3)
 
 
 ## Future implements
-1. Send a file for analysis in detonation service
+1. Policy class
+2. File analysis class
+3. Publisher class
