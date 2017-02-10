@@ -1,9 +1,9 @@
-# using module .\Classes\CBEPAPIComputerClass.psm1
-# using module .\Classes\CBEPAPIFileClass.psm1
-# using module .\Classes\CBEPAPIPolicyClass.psm1
-# using module .\Classes\CBEPAPIPublisherClass.psm1
-# using module .\Classes\CBEPAPIRequestClass.psm1
-using module .\Classes\CBEPAPISessionClass.psm1
+# using module ..\Classes\CBEPAPIComputerClass.psm1
+# using module ..\Classes\CBEPAPIFileClass.psm1
+# using module ..\Classes\CBEPAPIPolicyClass.psm1
+# using module ..\Classes\CBEPAPIPublisherClass.psm1
+# using module ..\Classes\CBEPAPIRequestClass.psm1
+using module ..\Classes\CBEPAPISessionClass.psm1
 
 <#
         .SYNOPSIS
