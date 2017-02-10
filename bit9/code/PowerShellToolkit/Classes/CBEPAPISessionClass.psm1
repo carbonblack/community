@@ -106,4 +106,24 @@ class CBEPSession{
         }
         return $responseObject
     }
+
+    # Parameters required:  $urlQueryPart - the query part of the API call based on the API documentation
+    # Returns:              $responseObject - the object that is returned from the API POST call
+    # This method will do a post query to the api
+    [system.object] PutQuery ([string]$urlQueryPart, [system.object]$jsonObject){
+        $tempResponse = @{}
+        try{
+            $responseObject = Invoke-RestMethod -Headers $this.apiHeader -Method Put -Uri ($this.apiUrl + $urlQueryPart) -Body $jsonObject -ContentType 'application/json'
+        }
+        catch{
+            $statusCode = $_.Exception.Response.StatusCode.value__
+            $statusDescription = $_.Exception.Response.StatusDescription
+            $tempResponse.Add("Message", "Problem with the PUT call")
+            $tempResponse.Add("Query", $urlQueryPart)
+            $tempResponse.Add("HttpStatus", $statusCode)
+            $tempResponse.Add("HttpDescription", $statusDescription)
+            $responseObject = $tempResponse
+        }
+        return $responseObject
+    }
 }

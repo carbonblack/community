@@ -59,9 +59,9 @@ class CBEPComputer{
     # This method will use an open session to turn on tamper protection with a post call to the api
     [void] EnableTamperProtection ([string]$computerID, [system.object]$session){
         If ($this.computer){
-            $urlQueryPart = "/Computer?q=id:" + $computerID + "&newTamperProtectionActive=true"
+            $urlQueryPart = "/Computer/" + $computerID + "?newTamperProtectionActive=true"
             $jsonObject = ConvertTo-Json -InputObject $this.computer
-            $this.computer = $session.postQuery($urlQueryPart, $jsonObject)
+            $this.computer = $session.putQuery($urlQueryPart, $jsonObject)
         }
     }
 
@@ -70,9 +70,9 @@ class CBEPComputer{
     # This method will use an open session to turn off tamper protection with a post call to the api
     [void] DisableTamperProtection ([string]$computerID, [system.object]$session){
         If ($this.computer){
-            $urlQueryPart = "/Computer?q=id:" + $computerID + "&newTamperProtectionActive=false"
+            $urlQueryPart = "/Computer/" + $computerID + "?newTamperProtectionActive=false"
             $jsonObject = ConvertTo-Json -InputObject $this.computer
-            $this.computer = $session.postQuery($urlQueryPart, $jsonObject)
+            $this.computer = $session.putQuery($urlQueryPart, $jsonObject)
         }
     }
 
@@ -81,9 +81,9 @@ class CBEPComputer{
     # This method will use an open session to turn off tamper protection with a post call to the api
     [void] DeleteComputer ([string]$computerID, [system.object]$session){
         If ($this.computer){
-            $urlQueryPart = "/Computer?q=id:" + $computerID + "&delete=true"
+            $urlQueryPart = "/Computer/" + $computerID + "?delete=true"
             $jsonObject = ConvertTo-Json -InputObject $this.computer
-            $this.computer = $session.postQuery($urlQueryPart, $jsonObject)
+            $this.computer = $session.putQuery($urlQueryPart, $jsonObject)
         }
     }
 }
