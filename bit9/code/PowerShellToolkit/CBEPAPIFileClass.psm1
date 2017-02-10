@@ -1,5 +1,5 @@
 <#
-    CB Protection API Tools for PowerShell v1.0
+    CB Protection API Tools for PowerShell v1.1
     Copyright (C) 2017 Thomas Brackin
 
     Requires: Powershell v5.1
