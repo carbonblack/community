@@ -18,6 +18,7 @@ class CBEPComputer{
 
     # Parameters required:  $computerName - this is the computer name that you want to get information about
     #                       $session - this is a session object from the CBEPSession class
+    # Returns: int - computerId
     # This method will use an open session to ask for a get query on the api
     [int] GetComputer ([string]$computerName, [system.object]$session){
         $urlQueryPart = "/Computer?q=name:*" + $computerName + "*&q=deleted:false"

@@ -1,4 +1,4 @@
-# using module ..\CBEPAPIComputerClass.psm1
+using module ..\CBEPAPIComputerClass.psm1
 # using module ..\CBEPAPIFileClass.psm1
 # using module ..\CBEPAPIPolicyClass.psm1
 # using module ..\CBEPAPIPublisherClass.psm1
