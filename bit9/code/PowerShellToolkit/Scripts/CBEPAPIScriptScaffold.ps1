@@ -9,7 +9,7 @@ using module ..\CBEPAPISessionClass.psm1
         .SYNOPSIS
         Use this as a template for all scripts created to use with the toolkit
         .DESCRIPTION
-
+        Uncomment out any modules are you using in this script and leave the code to check the credentials for the session
         .PARAMETER url
 
         .PARAMETER temp
