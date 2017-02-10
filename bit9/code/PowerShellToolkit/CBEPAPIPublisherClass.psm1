@@ -16,7 +16,7 @@
 class CBEPPublisher{
     [system.object]$publisher
     
-    # Parameters required:  $publisherId - this is the publisher ID that you want to get information about
+    # Parameters required:  $publisherId - Unique id of this publisher
     #                       $session - this is a session object from the CBEPSession class
     # This method will use an open session to ask for a get query on the api
     [void] GetPublisher ([string]$publisherId, [system.object]$session){
