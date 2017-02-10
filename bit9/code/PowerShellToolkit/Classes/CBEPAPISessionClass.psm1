@@ -18,17 +18,16 @@ class CBEPSession{
     [string]$apiUrl
 
     # Parameters required: none
-    # Returns: boolean - $true or $false depending on if the session was created
     # This method will save the session information needed to access the api
     # Check to make sure the config has been run
     # This will pull in the json with the encrypted values, decrypt, and create a session from them
     # It also clears up the memory from the decryption process
-    [boolean] EnterSession (){
+    [void] EnterSession (){
         try{
             $apiConfigTemp = ConvertFrom-Json "$(get-content $(Join-Path $env:temp "CBEPAPIConfig.json"))"
         }
         catch{
-            return $false
+            return
         }
 
         $Marshal = [System.Runtime.InteropServices.Marshal]
@@ -44,8 +43,6 @@ class CBEPSession{
 
         $Marshal::ZeroFreeBSTR($BstrUrl)
         $Marshal::ZeroFreeBSTR($BstrKey)
-
-        return $true
     }
 
     # Parameters required: None
