@@ -40,7 +40,7 @@ class CBEPComputer{
     # This method will use an open session to update the request with a post call to the api
     [void] UpdateComputer ([string]$computerID, [system.object]$session){
         If ($this.computer){
-            $urlQueryPart = "/Computer?q=id" + $computerID
+            $urlQueryPart = "/Computer?q=id:" + $computerID
             $i = 0
             While ($i -lt $this.computer.length){
                 If ($this.computer[$i].id -eq $computerID){
@@ -49,6 +49,28 @@ class CBEPComputer{
                 }
                 $i++
             }
+        }
+    }
+
+    # Parameters required:  $computerID - this is the ID of a computer
+    #                       $session - this is a session object from the CBEPSession class
+    # This method will use an open session to turn off tamper protection with a post call to the api
+    [void] EnableTamperProtection ([string]$computerID, [system.object]$session){
+        If ($this.computer){
+            $urlQueryPart = "/Computer?q=id:" + $computerID + "&newTamperProtectionActive=true"
+            $jsonObject = ConvertTo-Json -InputObject $this.computer
+            $this.computer = $session.postQuery($urlQueryPart, $jsonObject)
+        }
+    }
+
+    # Parameters required:  $computerID - this is the ID of a computer
+    #                       $session - this is a session object from the CBEPSession class
+    # This method will use an open session to turn off tamper protection with a post call to the api
+    [void] DisableTamperProtection ([string]$computerID, [system.object]$session){
+        If ($this.computer){
+            $urlQueryPart = "/Computer?q=id:" + $computerID + "&newTamperProtectionActive=false"
+            $jsonObject = ConvertTo-Json -InputObject $this.computer
+            $this.computer = $session.postQuery($urlQueryPart, $jsonObject)
         }
     }
 }

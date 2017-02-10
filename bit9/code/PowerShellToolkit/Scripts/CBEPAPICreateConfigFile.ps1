@@ -5,9 +5,9 @@
         This script takes in the URL of the CBEP server as well as the API key of the user that will be used in the API session.
         It converts this information to secure strings and saves it to a JSON file located in the $env:Temp folder.
         .PARAMETER url
-        This is the url of the CBEP server
+        string - This is the url of the CBEP server
         .PARAMETER key
-        This is the API key of the user that will run the session
+        string - This is the API key of the user that will run the session
         .EXAMPLE
         C: <PS> .\CBEPAPICreateConfigFile.ps1 -url cbep.server.com -key 123-456-789
         .NOTES
