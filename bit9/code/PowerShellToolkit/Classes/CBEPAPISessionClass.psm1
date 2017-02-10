@@ -17,13 +17,35 @@ class CBEPSession{
     [system.object]$apiHeader
     [string]$apiUrl
 
-    # Parameters required: $serverUrl - the URL to your CB Protection server
-    #                      $key - the API key that will be used for the session
+    # Parameters required: none
+    # Returns: boolean - $true or $false depending on if the session was created
     # This method will save the session information needed to access the api
-    [void] EnterSession ([string]$url, [string]$key){
+    # Check to make sure the config has been run
+    # This will pull in the json with the encrypted values, decrypt, and create a session from them
+    # It also clears up the memory from the decryption process
+    [boolean] EnterSession (){
+        try{
+            $apiConfigTemp = ConvertFrom-Json "$(get-content $(Join-Path $env:temp "CBEPAPIConfig.json"))"
+        }
+        catch{
+            return $false
+        }
+
+        $Marshal = [System.Runtime.InteropServices.Marshal]
+        $BstrUrl = $Marshal::SecureStringToBSTR(($apiConfigTemp.url | ConvertTo-SecureString))
+        $BstrKey = $Marshal::SecureStringToBSTR(($apiConfigTemp.key | ConvertTo-SecureString))
+
+        $keyTemp = $Marshal::PtrToStringAuto($BstrKey)
+        $urlTemp = $Marshal::PtrToStringAuto($BstrUrl)
+
         $this.apiHeader = @{}
-        $this.apiHeader.Add("X-Auth-Token", $key)
-        $this.apiUrl = "https://$url/api/bit9platform/v1"
+        $this.apiHeader.Add("X-Auth-Token", $keyTemp)
+        $this.apiUrl = "https://$urlTemp/api/bit9platform/v1"
+
+        $Marshal::ZeroFreeBSTR($BstrUrl)
+        $Marshal::ZeroFreeBSTR($BstrKey)
+
+        return $true
     }
 
     # Parameters required: None

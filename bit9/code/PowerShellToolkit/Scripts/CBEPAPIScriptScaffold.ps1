@@ -27,23 +27,15 @@ using module ..\Classes\CBEPAPISessionClass.psm1
         THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #>
 
-# Check to make sure the config has been run
-# This will pull in the json with the encrypted values, decrypt, and create a session from them
-# It also clears up the memory from the decryption process
-try{
-    $apiConfig = ConvertFrom-Json "$(get-content $(Join-Path $env:temp "CBEPAPIConfig.json"))"
+Param(
+    [parameter(
 
-    $CBEPSession = [CBEPSession]::new()
+    )]
+    [string]$tempParam
+)
 
-    $Marshal = [System.Runtime.InteropServices.Marshal]
-    $BstrUrl = $Marshal::SecureStringToBSTR(($apiConfig.url | ConvertTo-SecureString))
-    $BstrKey = $Marshal::SecureStringToBSTR(($apiConfig.key | ConvertTo-SecureString))
+$CBEPSession = [CBEPSession]::new()
 
-    $CBEPSession.EnterSession($Marshal::PtrToStringAuto($BstrUrl), $Marshal::PtrToStringAuto($BstrKey))
-
-    $Marshal::ZeroFreeBSTR($BstrUrl)
-    $Marshal::ZeroFreeBSTR($BstrKey)
-}
-catch{
-    "Please run the config tool first! .\Scripts\CBEPAPICreateConfigFile.ps1"
+If (!($CBEPSession.EnterSession())){
+    return "Please run the config tool first! .\Scripts\CBEPAPICreateConfigFile.ps1"
 }
