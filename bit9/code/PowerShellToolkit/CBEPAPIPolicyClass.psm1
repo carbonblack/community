@@ -13,5 +13,23 @@
 
 class CBEPPolicy{
     [system.object]$policy
-    
+
+    # Parameters required:  $policyId - this is the policy ID that you want to get information about
+    #                       $session - this is a session object from the CBEPSession class
+    # This method will use an open session to ask for a get query on the api
+    [void] GetPolicy ([string]$policyId, [system.object]$session){
+        $urlQueryPart = "/Policy?q=id:" + $policyId
+        $tempPolicy = $session.getQuery($urlQueryPart)
+        If ($this.policy){
+            $i = 0
+            While ($i -lt $this.policy.length){
+                If ($this.policy[$i].id -eq $tempPolicy.id){
+                    $this.policy[$i] = $tempPolicy
+                    return
+                }
+                $i++
+            }
+        }
+        $this.policy += $tempPolicy
+    }
 }
