@@ -35,11 +35,15 @@ Param(
     [string[]]$computerName
 )
 
+# Start default session block
+# Create a session and make sure it works
 $CBEPSession = [CBEPSession]::new()
-
-If (!($CBEPSession.EnterSession())){
-    return "Please run the config tool first! .\Scripts\CBEPAPICreateConfigFile.ps1"
+$CBEPSession.EnterSession()
+$sessionResult = $CBEPSession.TestSession()
+If ($sessionResult.HttpStatus -ne '200'){
+    return $sessionResult
 }
+# End default session block
 
 $CBEPComputer = [CBEPComputer]::new()
 
