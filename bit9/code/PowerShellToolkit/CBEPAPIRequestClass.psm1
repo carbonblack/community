@@ -1,5 +1,5 @@
 <#
-    CB Protection API Tools for PowerShell v1.0
+    CB Protection API Tools for PowerShell v1.1
     Copyright (C) 2017 Thomas Brackin
 
     Requires: Powershell v5.1
@@ -14,7 +14,7 @@
 # This class is for creating a request object that can hold an array of requests from the api
 # It also includes some methods to manipulate the requests
 class CBEPRequest{
-    [system.object]$requests
+    [system.object]$approvalRequest
 
     # Parameters required:  $requestID - this is the ID of an approval request
     #                           OR
@@ -25,22 +25,22 @@ class CBEPRequest{
         if ($requestID){
             $urlQueryPart = "/approvalRequest?q=id:" + $requestID
             $tempRequest = $session.getQuery($urlQueryPart)
-            If ($this.requests){
+            If ($this.approvalRequest){
                 $i = 0
-                While ($i -le $this.requests.length){
-                    If($this.requests[$i].id -eq $tempRequest.id){
-                        $this.requests[$i] = $tempRequest
+                While ($i -lt $this.approvalRequest.length){
+                    If($this.approvalRequest[$i].id -eq $tempRequest.id){
+                        $this.approvalRequest[$i] = $tempRequest
                         return
                     }
                     $i++
                 }
             }
-            $this.requests += $tempRequest
+            $this.approvalRequest += $tempRequest
         }
         elseif ($unopened){
-            $this.requests = $null
+            $this.approvalRequest = $null
             $urlQueryPart = "/approvalRequest?q=status:1"
-            $this.requests = $session.getQuery($urlQueryPart)
+            $this.approvalRequest = $session.getQuery($urlQueryPart)
         }
     }
 
@@ -49,12 +49,12 @@ class CBEPRequest{
     # This method will use an open session to update the request with a post call to the api
     [void] UpdateRequest ([string]$requestID, [system.object]$session){
         $urlQueryPart = "/approvalRequest/"
-        If ($this.requests){
+        If ($this.approvalRequest){
             $i = 0
-            While ($i -le $this.requests.length){
-                If ($this.requests[$i].id -eq $requestID){
-                    $jsonObject = ConvertTo-Json -InputObject $this.requests[$i]
-                    $this.requests[$i] = $session.postQuery($urlQueryPart, $jsonObject)
+            While ($i -lt $this.approvalRequest.length){
+                If ($this.approvalRequest[$i].id -eq $requestID){
+                    $jsonObject = ConvertTo-Json -InputObject $this.approvalRequest[$i]
+                    $this.approvalRequest[$i] = $session.postQuery($urlQueryPart, $jsonObject)
                 }
                 $i++
             }
@@ -65,27 +65,27 @@ class CBEPRequest{
     # This method will modify the variable to mark a request as opened
     # You will still need to call the update method before this is applied to the api
     [void] OpenRequest ([string]$requestID){
-        ($this.requests | Where-Object {$_.id -eq $requestID}).status = 2
+        ($this.approvalRequest | Where-Object {$_.id -eq $requestID}).status = 2
     }
 
     # Parameters required:  $requestID - this is the ID of an approval request
     # This method will modify the variable to mark a request as closed
     # You will still need to call the update method before this is applied to the api
     [void] CloseRequest ([string]$requestID){
-        ($this.requests | Where-Object {$_.id -eq $requestID}).status = 3
+        ($this.approvalRequest | Where-Object {$_.id -eq $requestID}).status = 3
     }
 
     # Parameters required:  $requestID - this is the ID of an approval request
     # This method will modify the variable to mark a request as approved
     # You will still need to call the update method before this is applied to the api
     [void] GrantRequest([string]$requestID){
-        ($this.requests | Where-Object {$_.id -eq $requestID}).resolution = 2
+        ($this.approvalRequest | Where-Object {$_.id -eq $requestID}).resolution = 2
     }
 
     # Parameters required:  $requestID - this is the ID of an approval request
     # This method will modify the variable to mark a request as rejected
     # You will still need to call the update method before this is applied to the api
     [void] BlockRequest([string]$requestID){
-        ($this.requests | Where-Object {$_.id -eq $requestID}).resolution = 1
+        ($this.approvalRequest | Where-Object {$_.id -eq $requestID}).resolution = 1
     }
 }

@@ -1,5 +1,5 @@
 <#
-    CB Protection API Tools for PowerShell v1.0
+    CB Protection API Tools for PowerShell v1.1
     Copyright (C) 2017 Thomas Brackin
 
     Requires: Powershell v5.1
@@ -12,9 +12,9 @@
 #>
 
 # This class is for creating a CBEP object that holds computer information
-# If also includes the methods needed to manipulate the data to send to the API
+# It also includes the methods needed to manipulate the data to send to the API
 class CBEPComputer{
-    [system.object]$computers
+    [system.object]$computer
 
     # Parameters required:  $computerName - this is the computer name that you want to get information about
     #                       $session - this is a session object from the CBEPSession class
@@ -22,33 +22,55 @@ class CBEPComputer{
     [void] GetComputer ([string]$computerName, [system.object]$session){
         $urlQueryPart = "/Computer?q=name:*" + $computerName + "*&q=deleted:false"
         $tempComputer = $session.getQuery($urlQueryPart)
-        If ($this.computers){
+        If ($this.computer){
             $i = 0
-            While ($i -le $this.computers.length){
-                If ($this.computers[$i].id -eq $tempComputer.id){
-                    $this.computers[$i] = $tempComputer
+            While ($i -lt $this.computer.length){
+                If ($this.computer[$i].id -eq $tempComputer.id){
+                    $this.computer[$i] = $tempComputer
                     return
                 }
                 $i++
             }
         }
-        $this.computers += $tempComputer
+        $this.computer += $tempComputer
     }
 
     # Parameters required:  $computerID - this is the ID of a computer
     #                       $session - this is a session object from the CBEPSession class
     # This method will use an open session to update the request with a post call to the api
     [void] UpdateComputer ([string]$computerID, [system.object]$session){
-        If ($this.computers){
-            $urlQueryPart = "/Computer?q=id" + $computerID
+        If ($this.computer){
+            $urlQueryPart = "/Computer?q=id:" + $computerID
             $i = 0
-            While ($i -le $this.computers.length){
-                If ($this.computers[$i].id -eq $computerID){
-                    $jsonObject = ConvertTo-Json -InputObject $this.computers[$i]
-                    $this.computers[$i] = $session.postQuery($urlQueryPart, $jsonObject)
+            While ($i -lt $this.computer.length){
+                If ($this.computer[$i].id -eq $computerID){
+                    $jsonObject = ConvertTo-Json -InputObject $this.computer[$i]
+                    $this.computer[$i] = $session.postQuery($urlQueryPart, $jsonObject)
                 }
                 $i++
             }
+        }
+    }
+
+    # Parameters required:  $computerID - this is the ID of a computer
+    #                       $session - this is a session object from the CBEPSession class
+    # This method will use an open session to turn on tamper protection with a post call to the api
+    [void] EnableTamperProtection ([string]$computerID, [system.object]$session){
+        If ($this.computer){
+            $urlQueryPart = "/Computer?q=id:" + $computerID + "&newTamperProtectionActive=true"
+            $jsonObject = ConvertTo-Json -InputObject $this.computer
+            $this.computer = $session.postQuery($urlQueryPart, $jsonObject)
+        }
+    }
+
+    # Parameters required:  $computerID - this is the ID of a computer
+    #                       $session - this is a session object from the CBEPSession class
+    # This method will use an open session to turn off tamper protection with a post call to the api
+    [void] DisableTamperProtection ([string]$computerID, [system.object]$session){
+        If ($this.computer){
+            $urlQueryPart = "/Computer?q=id:" + $computerID + "&newTamperProtectionActive=false"
+            $jsonObject = ConvertTo-Json -InputObject $this.computer
+            $this.computer = $session.postQuery($urlQueryPart, $jsonObject)
         }
     }
 }

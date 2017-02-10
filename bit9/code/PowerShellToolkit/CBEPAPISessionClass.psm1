@@ -1,5 +1,5 @@
 <#
-    CB Protection API Tools for PowerShell v1.0
+    CB Protection API Tools for PowerShell v1.1
     Copyright (C) 2017 Thomas Brackin
 
     Requires: Powershell v5.1
@@ -20,10 +20,10 @@ class CBEPSession{
     # Parameters required: $serverUrl - the URL to your CB Protection server
     #                      $key - the API key that will be used for the session
     # This method will save the session information needed to access the api
-    [void] EnterSession ([string]$serverUrl, [string]$key){
+    [void] EnterSession ([string]$url, [string]$key){
         $this.apiHeader = @{}
         $this.apiHeader.Add("X-Auth-Token", $key)
-        $this.apiUrl = "https://$serverUrl/api/bit9platform/v1"
+        $this.apiUrl = "https://$url/api/bit9platform/v1"
     }
 
     # Parameters required: None
