@@ -1,9 +1,9 @@
-# using method ..\CBEPAPIComputerClass.psm1
-# using method ..\CBEPAPIFileClass.psm1
-# using method ..\CBEPAPIPolicyClass.psm1
-# using method ..\CBEPAPIPublisherClass.psm1
-# using method ..\CBEPAPIRequestClass.psm1
-using method ..\CBEPAPISessionClass.psm1
+# using module ..\CBEPAPIComputerClass.psm1
+# using module ..\CBEPAPIFileClass.psm1
+# using module ..\CBEPAPIPolicyClass.psm1
+# using module ..\CBEPAPIPublisherClass.psm1
+# using module ..\CBEPAPIRequestClass.psm1
+using module ..\CBEPAPISessionClass.psm1
 
 <#
         .SYNOPSIS
