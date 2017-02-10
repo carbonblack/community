@@ -54,7 +54,7 @@ class CBEPComputer{
 
     # Parameters required:  $computerID - this is the ID of a computer
     #                       $session - this is a session object from the CBEPSession class
-    # This method will use an open session to turn off tamper protection with a post call to the api
+    # This method will use an open session to turn on tamper protection with a post call to the api
     [void] EnableTamperProtection ([string]$computerID, [system.object]$session){
         If ($this.computer){
             $urlQueryPart = "/Computer?q=id:" + $computerID + "&newTamperProtectionActive=true"
