@@ -10,7 +10,7 @@ using module ..\CBEPAPISessionClass.psm1
         Use this as a template for all scripts created to use with the toolkit
         .DESCRIPTION
         Uncomment out any modules are you using in this script and leave the code to check the credentials for the session
-        .PARAMETER temp
+        .PARAMETER computerName
 
         .EXAMPLE
 
@@ -26,6 +26,14 @@ using module ..\CBEPAPISessionClass.psm1
 
         THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #>
+
+Param(
+    [Parameter(
+        Mandatory=$true,
+        ValueFromPipeline=$true
+    )]
+    [string[]]$computerName
+)
 
 # Check to make sure the config has been run
 # This will pull in the json with the encrypted values, decrypt, and create a session from them
@@ -47,3 +55,9 @@ try{
 catch{
     "Please run the config tool first! .\Scripts\CBEPAPICreateConfigFile.ps1"
 }
+
+$CBEPComputer = [CBEPComputer]::new()
+
+$computerId = $CBEPComputer.GetComputer($computerName, $CBEPSession)
+
+$CBEPComputer.DeleteComputer($computerId, $CBEPSession)

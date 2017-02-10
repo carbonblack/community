@@ -19,7 +19,7 @@ class CBEPComputer{
     # Parameters required:  $computerName - this is the computer name that you want to get information about
     #                       $session - this is a session object from the CBEPSession class
     # This method will use an open session to ask for a get query on the api
-    [void] GetComputer ([string]$computerName, [system.object]$session){
+    [int] GetComputer ([string]$computerName, [system.object]$session){
         $urlQueryPart = "/Computer?q=name:*" + $computerName + "*&q=deleted:false"
         $tempComputer = $session.getQuery($urlQueryPart)
         If ($this.computer){
@@ -27,12 +27,13 @@ class CBEPComputer{
             While ($i -lt $this.computer.length){
                 If ($this.computer[$i].id -eq $tempComputer.id){
                     $this.computer[$i] = $tempComputer
-                    return
+                    return $this.computer[$i].id
                 }
                 $i++
             }
         }
         $this.computer += $tempComputer
+        return $tempComputer.id
     }
 
     # Parameters required:  $computerID - this is the ID of a computer
@@ -69,6 +70,17 @@ class CBEPComputer{
     [void] DisableTamperProtection ([string]$computerID, [system.object]$session){
         If ($this.computer){
             $urlQueryPart = "/Computer?q=id:" + $computerID + "&newTamperProtectionActive=false"
+            $jsonObject = ConvertTo-Json -InputObject $this.computer
+            $this.computer = $session.postQuery($urlQueryPart, $jsonObject)
+        }
+    }
+
+    # Parameters required:  $computerID - this is the ID of a computer
+    #                       $session - this is a session object from the CBEPSession class
+    # This method will use an open session to turn off tamper protection with a post call to the api
+    [void] DeleteComputer ([string]$computerID, [system.object]$session){
+        If ($this.computer){
+            $urlQueryPart = "/Computer?q=id:" + $computerID + "&delete=true"
             $jsonObject = ConvertTo-Json -InputObject $this.computer
             $this.computer = $session.postQuery($urlQueryPart, $jsonObject)
         }
