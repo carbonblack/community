@@ -38,8 +38,7 @@ Param(
 # Start default session block
 # Create a session and make sure it works
 $CBEPSession = [CBEPSession]::new()
-$CBEPSession.EnterSession()
-$sessionResult = $CBEPSession.TestSession()
+$sessionResult = $CBEPSession.EnterSession()
 If ($sessionResult.HttpStatus -ne '200'){
     return $sessionResult
 }

@@ -22,47 +22,45 @@ class CBEPSession{
     # Check to make sure the config has been run
     # This will pull in the json with the encrypted values, decrypt, and create a session from them
     # It also clears up the memory from the decryption process
-    [void] EnterSession (){
+    [system.object] EnterSession (){
         try{
             $apiConfigTemp = ConvertFrom-Json "$(get-content $(Join-Path $env:temp "CBEPAPIConfig.json"))"
         }
         catch{
-            return
+            return $null
         }
 
+        # Decrypt block start
         $Marshal = [System.Runtime.InteropServices.Marshal]
         $BstrUrl = $Marshal::SecureStringToBSTR(($apiConfigTemp.url | ConvertTo-SecureString))
         $BstrKey = $Marshal::SecureStringToBSTR(($apiConfigTemp.key | ConvertTo-SecureString))
 
         $keyTemp = $Marshal::PtrToStringAuto($BstrKey)
         $urlTemp = $Marshal::PtrToStringAuto($BstrUrl)
+        # Decrypt block end
 
         $this.apiHeader = @{}
         $this.apiHeader.Add("X-Auth-Token", $keyTemp)
         $this.apiUrl = "https://$urlTemp/api/bit9platform/v1"
 
+        # Free encrypted variables from memory
         $Marshal::ZeroFreeBSTR($BstrUrl)
         $Marshal::ZeroFreeBSTR($BstrKey)
-    }
 
-    # Parameters required: None
-    # This method will not give back errors for unresolvable URLs, only for bad URL paths
-    [system.object] TestSession (){
+        # Test the session
         $tempResponse = @{}
-        If ($this.apiUrl){
-            try{
-                $tempRequest = Invoke-WebRequest $this.apiUrl
-                $tempResponse.Add("Message", "Test successful")
-                $tempResponse.Add("HttpStatus", $tempRequest.StatusCode)
-                $tempResponse.Add("HttpDescription", $tempRequest.StatusDescription)
-            }
-            catch{
-                $statusCode = $_.Exception.Response.StatusCode.value__
-                $statusDescription = $_.Exception.Response.StatusDescription
-                $tempResponse.Add("Message", "Test failed")
-                $tempResponse.Add("HttpStatus", $statusCode)
-                $tempResponse.Add("HttpDescription", $statusDescription)
-            }
+        try{
+            $tempRequest = Invoke-WebRequest $this.apiUrl
+            $tempResponse.Add("Message", "Test successful")
+            $tempResponse.Add("HttpStatus", $tempRequest.StatusCode)
+            $tempResponse.Add("HttpDescription", $tempRequest.StatusDescription)
+        }
+        catch{
+            $statusCode = $_.Exception.Response.StatusCode.value__
+            $statusDescription = $_.Exception.Response.StatusDescription
+            $tempResponse.Add("Message", "Test failed")
+            $tempResponse.Add("HttpStatus", $statusCode)
+            $tempResponse.Add("HttpDescription", $statusDescription)
         }
         return $tempResponse
     }
