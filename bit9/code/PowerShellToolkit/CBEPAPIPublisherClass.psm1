@@ -34,4 +34,42 @@ class CBEPPublisher{
         }
         $this.publisher += $tempPublisher
     }
+
+    # Parameters required:  $publisherId - Unique id of this publisher
+    #                       $session - this is a session object from the CBEPSession class
+    # This method will use an open session to update the request with a post call to the api
+    [void] UpdatePublisher ([string]$publisherId, [system.object]$session){
+        If ($this.publisher){
+            $urlQueryPart = "/publisher?q=id:" + $publisherId
+            $i = 0
+            While ($i -lt $this.publisher.length){
+                If ($this.publisher[$i].id -eq $publisherId){
+                    $jsonObject = ConvertTo-Json -InputObject $this.publisher[$i]
+                    $this.publisher[$i] = $session.postQuery($urlQueryPart, $jsonObject)
+                }
+                $i++
+            }
+        }
+    }
+
+    # Parameters required:  $publisherId - Unique id of this publisher
+    # This method will modify the variable to mark a global publisher as approved
+    # You will still need to call the update method before this is applied to the api
+    [void] GrantPublisherGlobal ([string]$publisherId){
+        ($this.publisher | Where-Object {$_.id -eq $publisherId}).publisherState = 2
+    }
+
+    # Parameters required:  $publisherId - Unique id of this publisher
+    # This method will modify the variable to mark a global publisher as unapproved
+    # You will still need to call the update method before this is applied to the api
+    [void] RevokePublisherGlobal ([string]$publisherId){
+        ($this.publisher | Where-Object {$_.id -eq $publisherId}).publisherState = 1
+    }
+
+    # Parameters required:  $publisherId - this is the ID of a publisher in the catalog
+    # This method will modify the variable to mark a global publisher as banned
+    # You will still need to call the update method before this is applied to the api
+    [void] BlockPublisherGlobal ([string]$publisherId){
+        ($this.publisher | Where-Object {$_.id -eq $publisherId}).publisherState = 3
+    }
 }
