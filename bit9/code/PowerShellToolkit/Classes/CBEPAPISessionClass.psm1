@@ -18,6 +18,7 @@ class CBEPSession{
     [string]$apiUrl
 
     # Parameters required: none
+    # Returns: Object - The response code information from the test connection to the session
     # This method will save the session information needed to access the api
     # Check to make sure the config has been run
     # This will pull in the json with the encrypted values, decrypt, and create a session from them
@@ -43,11 +44,12 @@ class CBEPSession{
         $this.apiHeader.Add("X-Auth-Token", $keyTemp)
         $this.apiUrl = "https://$urlTemp/api/bit9platform/v1"
 
-        # Free encrypted variables from memory
+        # Free encrypted variables from memory start
         $Marshal::ZeroFreeBSTR($BstrUrl)
         $Marshal::ZeroFreeBSTR($BstrKey)
+        # Free encrypted variables from memory end
 
-        # Test the session
+        # Test the session start
         $tempResponse = @{}
         try{
             $tempRequest = Invoke-WebRequest $this.apiUrl
@@ -63,6 +65,7 @@ class CBEPSession{
             $tempResponse.Add("HttpDescription", $statusDescription)
         }
         return $tempResponse
+        # Test the session end
     }
 
     # Parameters required:  $urlQueryPart - the query part of the API call based on the API documentation
