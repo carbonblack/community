@@ -37,6 +37,25 @@ class CBEPPublisher{
 
     # Parameters required:  $publisherId - Unique id of this publisher
     #                       $session - this is a session object from the CBEPSession class
+    # This method will use an open session to ask for a get query on the api
+    [void] GetPublisherByName ([string]$publisherName, [system.object]$session){
+        $urlQueryPart = "/Publisher?q=name:*" + $publisherName + "*"
+        $tempPublisher = $session.getQuery($urlQueryPart)
+        If ($this.publisher){
+            $i = 0
+            While ($i -lt $this.publisher.length){
+                If ($this.publisher[$i].id -eq $tempPublisher.id){
+                    $this.publisher[$i] = $tempPublisher
+                    return
+                }
+                $i++
+            }
+        }
+        $this.publisher += $tempPublisher
+    }
+
+    # Parameters required:  $publisherId - Unique id of this publisher
+    #                       $session - this is a session object from the CBEPSession class
     # This method will use an open session to update the request with a post call to the api
     [void] UpdatePublisher ([string]$publisherId, [system.object]$session){
         If ($this.publisher){
