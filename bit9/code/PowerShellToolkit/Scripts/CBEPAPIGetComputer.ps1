@@ -46,6 +46,6 @@ If ($sessionResult.HttpStatus -ne '200'){
 
 $CBEPComputer = [CBEPComputer]::new()
 
-$CBEPComputer.GetComputer($computerName, $CBEPSession)
+$tempComputer = $CBEPComputer.GetComputer($computerName, $CBEPSession)
 
-return $CBEPComputer
+return $tempComputer
