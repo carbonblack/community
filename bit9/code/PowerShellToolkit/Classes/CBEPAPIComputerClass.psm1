@@ -15,6 +15,7 @@
 # It also includes the methods needed to manipulate the data to send to the API
 class CBEPComputer{
     [system.object]$computer
+    [system.object]$template
 
     # Parameters required:  $computerName - this is the computer name that you want to get information about
     #                       $session - this is a session object from the CBEPSession class
@@ -35,6 +36,27 @@ class CBEPComputer{
         }
         $this.computer += $tempComputer
         return $tempComputer
+    }
+
+    # Parameters required:  $computerName - this is the computer name that you want to get information about
+    #                       $session - this is a session object from the CBEPSession class
+    # Returns: system.object - templates returned from the API
+    # This method will use an open session to ask for a get query on the api
+    [system.object] GetTemplate ([string]$computerName, [system.object]$session){
+        $urlQueryPart = "/Computer?q=name:*" + $computerName + "*&q=deleted:false&q=template:true"
+        $tempTemplate = $session.getQuery($urlQueryPart)
+        If ($this.template){
+            $i = 0
+            While ($i -lt $this.template.length){
+                If ($this.template[$i].id -eq $tempTemplate.id){
+                    $this.template[$i] = $tempTemplate
+                    return $this.template[$i].id
+                }
+                $i++
+            }
+        }
+        $this.template += $tempTemplate
+        return $tempTemplate
     }
 
     # Parameters required:  $computerID - this is the ID of a computer
