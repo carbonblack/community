@@ -20,7 +20,7 @@ class CBEPComputer{
     # Parameters required:  $computerName - this is the computer name that you want to get information about
     #                       $session - this is a session object from the CBEPSession class
     # Returns: system.object - computers returned from the API
-    # This method will use an open session to ask for a get query on the api
+    # This method will use an open session to ask for a GET query on the api
     [system.object] GetComputer ([string]$computerName, [system.object]$session){
         $urlQueryPart = "/Computer?q=name:*" + $computerName + "*&q=deleted:false"
         $tempComputer = $session.getQuery($urlQueryPart)
@@ -41,7 +41,7 @@ class CBEPComputer{
     # Parameters required:  $computerName - this is the computer name that you want to get information about
     #                       $session - this is a session object from the CBEPSession class
     # Returns: system.object - templates returned from the API
-    # This method will use an open session to ask for a get query on the api
+    # This method will use an open session to ask for a GET query on the api
     [system.object] GetTemplate ([string]$computerName, [system.object]$session){
         $urlQueryPart = "/Computer?q=name:*" + $computerName + "*&q=deleted:false&q=template:true"
         $tempTemplate = $session.getQuery($urlQueryPart)
@@ -61,7 +61,7 @@ class CBEPComputer{
 
     # Parameters required:  $computerID - this is the ID of a computer
     #                       $session - this is a session object from the CBEPSession class
-    # This method will use an open session to update the request with a post call to the api
+    # This method will use an open session to update the request with a POST call to the api
     [void] UpdateComputer ([string]$computerID, [system.object]$session){
         If ($this.computer){
             $urlQueryPart = "/Computer?q=id:" + $computerID
@@ -78,34 +78,95 @@ class CBEPComputer{
 
     # Parameters required:  $computerID - this is the ID of a computer
     #                       $session - this is a session object from the CBEPSession class
-    # This method will use an open session to turn on tamper protection with a post call to the api
+    #                       $templateCloneCleanupMode - Mode of template cleanup. Can be one of:
+    #                                                       1=Manual (from console)
+    #                                                       2=Automatic, by time (specified by templateCloneCleanupTime and templateCloneCleanupTimeScale)
+    #                                                       3=Automatic, when new computer with the same name comes online
+    #                                                       4=Automatic, as soon as computer goes offline                     
+    #                       $templateCloneCleanupTime - If templateCloneCleanupMode is 2, this is time before clone is cleaned up. Time unit is specified in templateCloneCleanupTimeScale
+    #                       $templateCloneCleanupTimeScale - Time unit of template cleanup. Can be one of:
+    #                                                           1=Hours
+    #                                                           2=Days
+    #                                                           3=Weeks
+    # This method will modify the variables to modify template settings
+    # You will still need to call the update method before this is applied to the api
+    [void] ConfigureTemplateOptions ([string]$computerID, [string]$templateCloneCleanupMode, [string]$templateCloneCleanupTime, [string]$templateCloneCleanupTimeScale, [system.object]$session){
+        If ($templateCloneCleanupMode){
+            ($this.template | Where-Object {$_.id eq $computerID}).templateCloneCleanupMode = $templateCloneCleanupMode
+        }
+        If ($templateCloneCleanupTime){
+            ($this.template | Where-Object {$_.id eq $computerID}).templateCloneCleanupTime = $$templateCloneCleanupTime
+        }
+        If ($templateCloneCleanupTimeScale){
+            ($this.template | Where-Object {$_.id eq $computerID}).templateCloneCleanupTimeScale = $$templateCloneCleanupTimeScale
+        }
+    }
+
+    # Parameters required:  $computerID - this is the ID of a computer
+    #                       $session - this is a session object from the CBEPSession class
+    # This method will use an open session to update the request with a PUT for the conversion
+    [void] ConvertToTemplate ([string]$computerID, [system.object]$session){
+        If ($this.computer){
+            $urlQueryPart = "/Computer/" + $computerID + "?changeTemplate:true"
+            $i = 0
+            While ($i -lt $this.computer.length){
+                If ($this.computer[$i].id -eq $computerID){
+                    $jsonObject = ConvertTo-Json -InputObject $this.computer[$i]
+                    $this.computer[$i] = $session.putQuery($urlQueryPart, $jsonObject)
+                }
+                $i++
+            }
+        }
+    }
+
+    # Parameters required:  $computerID - this is the ID of a computer
+    #                       $session - this is a session object from the CBEPSession class
+    # This method will use an open session to turn on tamper protection with a PUT call to the api
     [void] EnableTamperProtection ([string]$computerID, [system.object]$session){
         If ($this.computer){
             $urlQueryPart = "/Computer/" + $computerID + "?newTamperProtectionActive=true"
-            $jsonObject = ConvertTo-Json -InputObject $this.computer
-            $this.computer = $session.putQuery($urlQueryPart, $jsonObject)
+            $i = 0
+            While ($i -lt $this.computer.length){
+                If ($this.computer[$i].id -eq $computerID){
+                    $jsonObject = ConvertTo-Json -InputObject $this.computer[$i]
+                    $this.computer[$i] = $session.putQuery($urlQueryPart, $jsonObject)
+                }
+                $i++
+            }
         }
     }
 
     # Parameters required:  $computerID - this is the ID of a computer
     #                       $session - this is a session object from the CBEPSession class
-    # This method will use an open session to turn off tamper protection with a post call to the api
+    # This method will use an open session to turn off tamper protection with a PUT call to the api
     [void] DisableTamperProtection ([string]$computerID, [system.object]$session){
         If ($this.computer){
             $urlQueryPart = "/Computer/" + $computerID + "?newTamperProtectionActive=false"
-            $jsonObject = ConvertTo-Json -InputObject $this.computer
-            $this.computer = $session.putQuery($urlQueryPart, $jsonObject)
+            $i = 0
+            While ($i -lt $this.computer.length){
+                If ($this.computer[$i].id -eq $computerID){
+                    $jsonObject = ConvertTo-Json -InputObject $this.computer[$i]
+                    $this.computer[$i] = $session.putQuery($urlQueryPart, $jsonObject)
+                }
+                $i++
+            }
         }
     }
 
     # Parameters required:  $computerID - this is the ID of a computer
     #                       $session - this is a session object from the CBEPSession class
-    # This method will use an open session to turn off tamper protection with a post call to the api
+    # This method will use an open session to turn off tamper protection with a PUT call to the api
     [void] DeleteComputer ([string]$computerID, [system.object]$session){
         If ($this.computer){
             $urlQueryPart = "/Computer/" + $computerID + "?delete=true"
-            $jsonObject = ConvertTo-Json -InputObject $this.computer
-            $this.computer = $session.putQuery($urlQueryPart, $jsonObject)
+            $i = 0
+            While ($i -lt $this.computer.length){
+                If ($this.computer[$i].id -eq $computerID){
+                    $jsonObject = ConvertTo-Json -InputObject $this.computer[$i]
+                    $this.computer[$i] = $session.putQuery($urlQueryPart, $jsonObject)
+                }
+                $i++
+            }
         }
     }
 }
