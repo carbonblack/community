@@ -88,17 +88,21 @@ class CBEPComputer{
     #                                                           1=Hours
     #                                                           2=Days
     #                                                           3=Weeks
+    #                       $templateTrackModsOnly - If True, clones of this template will track only new and modified files. This value can be changed only if ‘changeTemplate’ request parameter is set to true.
     # This method will modify the variables to modify template settings
     # You will still need to call the update method before this is applied to the api
-    [void] ConfigureTemplateOptions ([string]$computerID, [string]$templateCloneCleanupMode, [string]$templateCloneCleanupTime, [string]$templateCloneCleanupTimeScale, [system.object]$session){
+    [void] ConfigureTemplateOptions ([string]$computerID, [string]$templateCloneCleanupMode, [string]$templateCloneCleanupTime, [string]$templateCloneCleanupTimeScale, [string]$templateTrackModsOnly, [system.object]$session){
         If ($templateCloneCleanupMode){
             ($this.template | Where-Object {$_.id eq $computerID}).templateCloneCleanupMode = $templateCloneCleanupMode
         }
         If ($templateCloneCleanupTime){
-            ($this.template | Where-Object {$_.id eq $computerID}).templateCloneCleanupTime = $$templateCloneCleanupTime
+            ($this.template | Where-Object {$_.id eq $computerID}).templateCloneCleanupTime = $templateCloneCleanupTime
         }
         If ($templateCloneCleanupTimeScale){
-            ($this.template | Where-Object {$_.id eq $computerID}).templateCloneCleanupTimeScale = $$templateCloneCleanupTimeScale
+            ($this.template | Where-Object {$_.id eq $computerID}).templateCloneCleanupTimeScale = $templateCloneCleanupTimeScale
+        }
+        IF ($templateTrackModsOnly){
+            ($this.template | Where-Object {$_.id eq $computerID}).templateTrackModsOnly = $templateTrackModsOnly
         }
     }
 
