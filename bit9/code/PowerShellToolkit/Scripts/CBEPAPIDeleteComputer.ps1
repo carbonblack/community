@@ -46,6 +46,8 @@ If ($sessionResult.HttpStatus -ne '200'){
 
 $CBEPComputer = [CBEPComputer]::new()
 
-$computerId = $CBEPComputer.GetComputer($computerName, $CBEPSession)
+$computers = $CBEPComputer.GetComputer($computerName, $CBEPSession)
 
-$CBEPComputer.DeleteComputer($computerId, $CBEPSession)
+ForEach ($computer in $computers){
+    $CBEPComputer.DeleteComputer($computer.id, $CBEPSession)
+}
