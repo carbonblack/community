@@ -93,16 +93,16 @@ class CBEPComputer{
     # You will still need to call the update method before this is applied to the api
     [void] ConfigureTemplateOptions ([string]$computerID, [string]$templateCloneCleanupMode, [string]$templateCloneCleanupTime, [string]$templateCloneCleanupTimeScale, [string]$templateTrackModsOnly, [system.object]$session){
         If ($templateCloneCleanupMode){
-            ($this.template | Where-Object {$_.id eq $computerID}).templateCloneCleanupMode = $templateCloneCleanupMode
+            ($this.template | Where-Object {$_.id -eq $computerID}).templateCloneCleanupMode = $templateCloneCleanupMode
         }
         If ($templateCloneCleanupTime){
-            ($this.template | Where-Object {$_.id eq $computerID}).templateCloneCleanupTime = $templateCloneCleanupTime
+            ($this.template | Where-Object {$_.id -eq $computerID}).templateCloneCleanupTime = $templateCloneCleanupTime
         }
         If ($templateCloneCleanupTimeScale){
-            ($this.template | Where-Object {$_.id eq $computerID}).templateCloneCleanupTimeScale = $templateCloneCleanupTimeScale
+            ($this.template | Where-Object {$_.id -eq $computerID}).templateCloneCleanupTimeScale = $templateCloneCleanupTimeScale
         }
         IF ($templateTrackModsOnly){
-            ($this.template | Where-Object {$_.id eq $computerID}).templateTrackModsOnly = $templateTrackModsOnly
+            ($this.template | Where-Object {$_.id -eq $computerID}).templateTrackModsOnly = $templateTrackModsOnly
         }
     }
 
