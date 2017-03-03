@@ -25,7 +25,7 @@ class CBEPSession{
     # It also clears up the memory from the decryption process
     [system.object] EnterSession (){
         try{
-            $apiConfigTemp = ConvertFrom-Json "$(get-content $(Join-Path $env:temp "CBEPAPIConfig.json"))"
+            $apiConfigTemp = ConvertFrom-Json "$(get-content $(Join-Path $env:appdata "CBConfig\CBEPApiConfig.json"))"
         }
         catch{
             return $null
