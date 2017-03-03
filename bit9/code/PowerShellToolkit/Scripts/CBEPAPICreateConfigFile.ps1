@@ -41,4 +41,7 @@ $secureValue = @{
 $secureValue.url = $url | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString
 $secureValue.key = $key | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString
 
-$secureValue | ConvertTo-Json | Out-File $(Join-Path $env:temp "CBEPApiConfig.json")
+Remove-Item -Path "$env:appdata\CBConfig" -Force -ErrorAction Ignore
+New-Item -Path "$env:appdata\CBConfig" -Force -ItemType Directory
+
+$secureValue | ConvertTo-Json | Out-File $(Join-Path $env:appdata "CBConfig\CBEPApiConfig.json")
