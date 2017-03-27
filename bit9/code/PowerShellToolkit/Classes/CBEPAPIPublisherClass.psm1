@@ -1,5 +1,5 @@
 <#
-    CB Protection API Tools for PowerShell v1.1
+    CB Protection API Tools for PowerShell v2.0
     Copyright (C) 2017 Thomas Brackin
 
     Requires: Powershell v5.1
@@ -17,54 +17,44 @@ class CBEPPublisher{
     [system.object]$publisher
     
     # Parameters required:  $publisherId - Unique id of this publisher
+    #                       $publisherName - the name of the publisher
     #                       $session - this is a session object from the CBEPSession class
     # This method will use an open session to ask for a get query on the api
-    [void] GetPublisher ([string]$publisherId, [system.object]$session){
-        $urlQueryPart = "/Publisher?q=id:" + $publisherId
-        $tempPublisher = $session.getQuery($urlQueryPart)
+    [system.object] Get ([string]$publisherName, [string]$publisherId, [system.object]$session){
+        If ($publisherName){
+            $urlQueryPart = "/Publisher?q=name:*" + $publisherName + "*"
+        }
+        ElseIf ($publisherId){
+            $urlQueryPart = "/Publisher?q=id:" + $publisherId
+        }
+        Else{
+            return $null
+        }
+        $tempPublisher = $session.get($urlQueryPart)
         If ($this.publisher){
             $i = 0
             While ($i -lt $this.publisher.length){
                 If ($this.publisher[$i].id -eq $tempPublisher.id){
                     $this.publisher[$i] = $tempPublisher
-                    return
                 }
                 $i++
             }
         }
         $this.publisher += $tempPublisher
-    }
-
-    # Parameters required:  $publisherId - Unique id of this publisher
-    #                       $session - this is a session object from the CBEPSession class
-    # This method will use an open session to ask for a get query on the api
-    [void] GetPublisherByName ([string]$publisherName, [system.object]$session){
-        $urlQueryPart = "/Publisher?q=name:*" + $publisherName + "*"
-        $tempPublisher = $session.getQuery($urlQueryPart)
-        If ($this.publisher){
-            $i = 0
-            While ($i -lt $this.publisher.length){
-                If ($this.publisher[$i].id -eq $tempPublisher.id){
-                    $this.publisher[$i] = $tempPublisher
-                    return
-                }
-                $i++
-            }
-        }
-        $this.publisher += $tempPublisher
+        return $tempPublisher
     }
 
     # Parameters required:  $publisherId - Unique id of this publisher
     #                       $session - this is a session object from the CBEPSession class
     # This method will use an open session to update the request with a post call to the api
-    [void] UpdatePublisher ([string]$publisherId, [system.object]$session){
+    [void] Update ([string]$publisherId, [system.object]$session){
         If ($this.publisher){
             $urlQueryPart = "/publisher?q=id:" + $publisherId
             $i = 0
             While ($i -lt $this.publisher.length){
                 If ($this.publisher[$i].id -eq $publisherId){
                     $jsonObject = ConvertTo-Json -InputObject $this.publisher[$i]
-                    $this.publisher[$i] = $session.postQuery($urlQueryPart, $jsonObject)
+                    $this.publisher[$i] = $session.post($urlQueryPart, $jsonObject)
                 }
                 $i++
             }
@@ -73,22 +63,30 @@ class CBEPPublisher{
 
     # Parameters required:  $publisherId - Unique id of this publisher
     # This method will modify the variable to mark a global publisher as approved
-    # You will still need to call the update method before this is applied to the api
-    [void] GrantPublisherGlobal ([string]$publisherId){
+    [void] Grant ([string]$publisherId, [system.object]$session){
         ($this.publisher | Where-Object {$_.id -eq $publisherId}).publisherState = 2
+        $this.Update($publisherId, $session)
     }
 
     # Parameters required:  $publisherId - Unique id of this publisher
     # This method will modify the variable to mark a global publisher as unapproved
-    # You will still need to call the update method before this is applied to the api
-    [void] RevokePublisherGlobal ([string]$publisherId){
+    [void] Revoke ([string]$publisherId, [system.object]$session){
         ($this.publisher | Where-Object {$_.id -eq $publisherId}).publisherState = 1
+        $this.Update($publisherId, $session)
     }
 
     # Parameters required:  $publisherId - this is the ID of a publisher in the catalog
     # This method will modify the variable to mark a global publisher as banned
-    # You will still need to call the update method before this is applied to the api
-    [void] BlockPublisherGlobal ([string]$publisherId){
+    [void] Block ([string]$publisherId, [system.object]$session){
         ($this.publisher | Where-Object {$_.id -eq $publisherId}).publisherState = 3
+        $this.Update($publisherId, $session)
+    }
+
+    [void] GrantTrust (){
+
+    }
+
+    [void] RevokeTrust (){
+
     }
 }

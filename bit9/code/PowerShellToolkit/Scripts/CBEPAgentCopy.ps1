@@ -7,7 +7,7 @@
         update files to allow the agents to still update normally after the server version has updated. For more information on this architecture, please consult the
         CB Protection document 'Cb Protection - Always-Connected Agents.pdf'.
         .NOTES
-        CB Protection API Tools for PowerShell v1.1
+        CB Protection API Tools for PowerShell v2.0
         Copyright (C) 2017 Thomas Brackin
 
         Requires: Powershell v5.1

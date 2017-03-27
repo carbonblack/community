@@ -1,8 +1,4 @@
 using module ..\Classes\CBEPAPIComputerClass.psm1
-# using module ..\Classes\CBEPAPIFileClass.psm1
-# using module ..\Classes\CBEPAPIPolicyClass.psm1
-# using module ..\Classes\CBEPAPIPublisherClass.psm1
-# using module ..\Classes\CBEPAPIRequestClass.psm1
 using module ..\Classes\CBEPAPISessionClass.psm1
 
 <#
@@ -15,7 +11,7 @@ using module ..\Classes\CBEPAPISessionClass.psm1
         .EXAMPLE
 
         .NOTES
-        CB Protection API Tools for PowerShell v1.1
+        CB Protection API Tools for PowerShell v2.0
         Copyright (C) 2017 Thomas Brackin
 
         Requires: Powershell v5.1
@@ -37,15 +33,15 @@ Param(
 
 # Start default session block
 # Create a session and make sure it works
-$CBEPSession = [CBEPSession]::new()
-$sessionResult = $CBEPSession.EnterSession()
+$Session = [CBEPSession]::new()
+$sessionResult = $Session.Initialize()
 If ($sessionResult.HttpStatus -ne '200'){
     return $sessionResult
 }
 # End default session block
 
-$CBEPComputer = [CBEPComputer]::new()
+$Computer = [CBEPComputer]::new()
 
-$tempComputer = $CBEPComputer.GetComputer($computerName, $CBEPSession)
+$Computer.Get($computerName, "", $Session)
 
-return $tempComputer
+return $Computer.computer

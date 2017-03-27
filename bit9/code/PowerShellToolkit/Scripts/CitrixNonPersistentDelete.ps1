@@ -1,10 +1,3 @@
-# using module ..\Classes\CBEPAPIComputerClass.psm1
-# using module ..\Classes\CBEPAPIFileClass.psm1
-# using module ..\Classes\CBEPAPIPolicyClass.psm1
-# using module ..\Classes\CBEPAPIPublisherClass.psm1
-# using module ..\Classes\CBEPAPIRequestClass.psm1
-# using module ..\Classes\CBEPAPISessionClass.psm1
-
 <#
         .SYNOPSIS
         Use this as a template for all scripts created to use with the toolkit
@@ -15,7 +8,7 @@
         .EXAMPLE
 
         .NOTES
-        CB Protection API Tools for PowerShell v1.1
+        CB Protection API Tools for PowerShell v2.0
         Copyright (C) 2017 Thomas Brackin
 
         Requires: Powershell v5.1
@@ -28,6 +21,6 @@
 #>
 Set-Location -Path $PSScriptRoot
 
-$citrixNonPersistentPrefix = "YOUR PREFIX HERE"
+$citrixNonPersistentPrefix = "*YOUR PREFIX HERE*"
 
 .\CBEPAPIDeleteComputer.ps1 -computerName ($citrixNonPersistentPrefix)

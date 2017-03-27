@@ -11,7 +11,7 @@
         .EXAMPLE
         C: <PS> .\CBEPAPICreateConfigFile.ps1 -url cbep.server.com -key 123-456-789
         .NOTES
-        CB Protection API Tools for PowerShell v1.1
+        CB Protection API Tools for PowerShell v2.0
         Copyright (C) 2017 Thomas Brackin
 
         Requires: Powershell v5.1
@@ -31,17 +31,25 @@ Param(
     [parameter(
         Mandatory=$true
     )]
-    [string[]]$key
+    [string[]]$key,
+    [parameter(
+        Mandatory=$false
+    )]
+    [string[]]$vtkey
 )
 $secureValue = @{
     url=$null
     key=$null
+    vtkey=$null
 }
 
 $secureValue.url = $url | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString
 $secureValue.key = $key | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString
+If ($vtkey){
+    $secureValue.vtkey = $key | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString
+}
 
-Remove-Item -Path "$env:appdata\CBConfig" -Force -ErrorAction Ignore
-New-Item -Path "$env:appdata\CBConfig" -Force -ItemType Directory
+Remove-Item -Path "$env:localappdata\CBConfig" -Force -ErrorAction Ignore
+New-Item -Path "$env:localappdata\CBConfig" -Force -ItemType Directory
 
-$secureValue | ConvertTo-Json | Out-File $(Join-Path $env:appdata "CBConfig\CBEPApiConfig.json")
+$secureValue | ConvertTo-Json | Out-File $(Join-Path $env:localappdata "CBConfig\CBEPApiConfig.json")
