@@ -1,19 +1,12 @@
-# using module ..\Classes\CBEPAPIComputerClass.psm1
-# using module ..\Classes\CBEPAPIEventClass.psm1
-# using module ..\Classes\CBEPAPIFileClass.psm1
-# using module ..\Classes\CBEPAPIPolicyClass.psm1
-# using module ..\Classes\CBEPAPIPublisherClass.psm1
-# using module ..\Classes\CBEPAPIRequestClass.psm1
+using module ..\Classes\CBEPAPIComputerClass.psm1
 using module ..\Classes\CBEPAPISessionClass.psm1
-# using module ..\Classes\CBEPAPITemplateClass.psm1
-# using module ..\Classes\CBEPAPIVTAnalysisClass.psm1
 
 <#
         .SYNOPSIS
         Use this as a template for all scripts created to use with the toolkit
         .DESCRIPTION
         Uncomment out any modules are you using in this script and leave the code to check the credentials for the session
-        .PARAMETER temp
+        .PARAMETER computerName
 
         .EXAMPLE
 
@@ -31,10 +24,11 @@ using module ..\Classes\CBEPAPISessionClass.psm1
 #>
 
 Param(
-    [parameter(
-
+    [Parameter(
+        Mandatory=$true,
+        ValueFromPipeline=$true
     )]
-    [string]$tempParam
+    [string[]]$computerName
 )
 
 # Start default session block
@@ -45,3 +39,11 @@ If ($sessionResult.HttpStatus -ne '200'){
     return $sessionResult
 }
 # End default session block
+
+$Computer = [CBEPComputer]::new()
+
+$Computer.Get($computerName, "", $Session)
+
+ForEach ($machine in $Computer.computer){
+    $Computer.Delete($machine.id, $Session)
+}

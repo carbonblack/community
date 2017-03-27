@@ -1,13 +1,3 @@
-# using module ..\Classes\CBEPAPIComputerClass.psm1
-# using module ..\Classes\CBEPAPIEventClass.psm1
-# using module ..\Classes\CBEPAPIFileClass.psm1
-# using module ..\Classes\CBEPAPIPolicyClass.psm1
-# using module ..\Classes\CBEPAPIPublisherClass.psm1
-# using module ..\Classes\CBEPAPIRequestClass.psm1
-using module ..\Classes\CBEPAPISessionClass.psm1
-# using module ..\Classes\CBEPAPITemplateClass.psm1
-# using module ..\Classes\CBEPAPIVTAnalysisClass.psm1
-
 <#
         .SYNOPSIS
         Use this as a template for all scripts created to use with the toolkit
@@ -29,19 +19,8 @@ using module ..\Classes\CBEPAPISessionClass.psm1
 
         THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #>
+Set-Location -Path $PSScriptRoot
 
-Param(
-    [parameter(
+$citrixNonPersistentPrefix = "*YOUR PREFIX HERE*"
 
-    )]
-    [string]$tempParam
-)
-
-# Start default session block
-# Create a session and make sure it works
-$Session = [CBEPSession]::new()
-$sessionResult = $Session.Initialize()
-If ($sessionResult.HttpStatus -ne '200'){
-    return $sessionResult
-}
-# End default session block
+.\CBEPAPIDeleteComputer.ps1 -computerName ($citrixNonPersistentPrefix)

@@ -1,5 +1,5 @@
 <#
-    CB Protection API Tools for PowerShell v1.1
+    CB Protection API Tools for PowerShell v2.0
     Copyright (C) 2017 Thomas Brackin
 
     Requires: Powershell v5.1
@@ -17,9 +17,9 @@ class CBEPPolicy{
     # Parameters required:  $policyId - Unique id of this policy
     #                       $session - this is a session object from the CBEPSession class
     # This method will use an open session to ask for a get query on the api
-    [void] GetPolicy ([string]$policyId, [system.object]$session){
+    [void] Get ([string]$policyId, [system.object]$session){
         $urlQueryPart = "/Policy?q=id:" + $policyId
-        $tempPolicy = $session.getQuery($urlQueryPart)
+        $tempPolicy = $session.get($urlQueryPart)
         If ($this.policy){
             $i = 0
             While ($i -lt $this.policy.length){
