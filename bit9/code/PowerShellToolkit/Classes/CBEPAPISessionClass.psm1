@@ -1,5 +1,5 @@
 <#
-    CB Protection API Tools for PowerShell v1.0
+    CB Protection API Tools for PowerShell v2.0
     Copyright (C) 2017 Thomas Brackin
 
     Requires: Powershell v5.1
@@ -17,41 +17,58 @@ class CBEPSession{
     [system.object]$apiHeader
     [string]$apiUrl
 
-    # Parameters required: $serverUrl - the URL to your CB Protection server
-    #                      $key - the API key that will be used for the session
+    # Parameters required: none
+    # Returns: Object - The response code information from the test connection to the session
     # This method will save the session information needed to access the api
-    [void] EnterSession ([string]$serverUrl, [string]$key){
-        $this.apiHeader = @{}
-        $this.apiHeader.Add("X-Auth-Token", $key)
-        $this.apiUrl = "https://$serverUrl/api/bit9platform/v1"
-    }
+    # Check to make sure the config has been run
+    # This will pull in the json with the encrypted values, decrypt, and create a session from them
+    # It also clears up the memory from the decryption process
+    [system.object] Initialize (){
+        try{
+            $apiConfigTemp = ConvertFrom-Json "$(get-content $(Join-Path $env:localappdata "CBConfig\CBEPApiConfig.json"))"
+        }
+        catch{
+            return $null
+        }
 
-    # Parameters required: None
-    # This method will not give back errors for unresolvable URLs, only for bad URL paths
-    [system.object] TestSession (){
+        # Decrypt strings
+        $Marshal = [System.Runtime.InteropServices.Marshal]
+        $BstrUrl = $Marshal::SecureStringToBSTR(($apiConfigTemp.url | ConvertTo-SecureString))
+        $BstrKey = $Marshal::SecureStringToBSTR(($apiConfigTemp.key | ConvertTo-SecureString))
+        $keyTemp = $Marshal::PtrToStringAuto($BstrKey)
+        $urlTemp = $Marshal::PtrToStringAuto($BstrUrl)
+
+        $this.apiHeader = @{}
+        $this.apiHeader.Add("X-Auth-Token", $keyTemp)
+        $this.apiUrl = "https://$urlTemp/api/bit9platform/v1"
+
+        # Free encrypted variables from memory
+        $Marshal::ZeroFreeBSTR($BstrUrl)
+        $Marshal::ZeroFreeBSTR($BstrKey)
+
+        # Test the session start
         $tempResponse = @{}
-        If ($this.apiUrl){
-            try{
-                $tempRequest = Invoke-WebRequest $this.apiUrl
-                $tempResponse.Add("Message", "Test successful")
-                $tempResponse.Add("HttpStatus", $tempRequest.StatusCode)
-                $tempResponse.Add("HttpDescription", $tempRequest.StatusDescription)
-            }
-            catch{
-                $statusCode = $_.Exception.Response.StatusCode.value__
-                $statusDescription = $_.Exception.Response.StatusDescription
-                $tempResponse.Add("Message", "Test failed")
-                $tempResponse.Add("HttpStatus", $statusCode)
-                $tempResponse.Add("HttpDescription", $statusDescription)
-            }
+        try{
+            $tempRequest = Invoke-WebRequest $this.apiUrl
+            $tempResponse.Add("Message", "Test successful")
+            $tempResponse.Add("HttpStatus", $tempRequest.StatusCode)
+            $tempResponse.Add("HttpDescription", $tempRequest.StatusDescription)
+        }
+        catch{
+            $statusCode = $_.Exception.Response.StatusCode.value__
+            $statusDescription = $_.Exception.Response.StatusDescription
+            $tempResponse.Add("Message", "Test failed")
+            $tempResponse.Add("HttpStatus", $statusCode)
+            $tempResponse.Add("HttpDescription", $statusDescription)
         }
         return $tempResponse
+        # Test the session end
     }
 
     # Parameters required:  $urlQueryPart - the query part of the API call based on the API documentation
     # Returns:              $responseObject - the object that is returned from the API GET call
     # This method will do a get query on the api
-    [system.object] GetQuery ([string]$urlQueryPart){
+    [system.object] Get ([string]$urlQueryPart){
         $tempResponse = @{}
         try{
             $responseObject = Invoke-RestMethod -Headers $this.apiHeader -Method Get -Uri ($this.apiUrl + $urlQueryPart)
@@ -71,7 +88,7 @@ class CBEPSession{
     # Parameters required:  $urlQueryPart - the query part of the API call based on the API documentation
     # Returns:              $responseObject - the object that is returned from the API POST call
     # This method will do a post query to the api
-    [system.object] PostQuery ([string]$urlQueryPart, [system.object]$jsonObject){
+    [system.object] Post ([string]$urlQueryPart, [system.object]$jsonObject){
         $tempResponse = @{}
         try{
             $responseObject = Invoke-RestMethod -Headers $this.apiHeader -Method Post -Uri ($this.apiUrl + $urlQueryPart) -Body $jsonObject -ContentType 'application/json'
@@ -80,6 +97,26 @@ class CBEPSession{
             $statusCode = $_.Exception.Response.StatusCode.value__
             $statusDescription = $_.Exception.Response.StatusDescription
             $tempResponse.Add("Message", "Problem with the POST call")
+            $tempResponse.Add("Query", $urlQueryPart)
+            $tempResponse.Add("HttpStatus", $statusCode)
+            $tempResponse.Add("HttpDescription", $statusDescription)
+            $responseObject = $tempResponse
+        }
+        return $responseObject
+    }
+
+    # Parameters required:  $urlQueryPart - the query part of the API call based on the API documentation
+    # Returns:              $responseObject - the object that is returned from the API POST call
+    # This method will do a post query to the api
+    [system.object] Put ([string]$urlQueryPart, [system.object]$jsonObject){
+        $tempResponse = @{}
+        try{
+            $responseObject = Invoke-RestMethod -Headers $this.apiHeader -Method Put -Uri ($this.apiUrl + $urlQueryPart) -Body $jsonObject -ContentType 'application/json'
+        }
+        catch{
+            $statusCode = $_.Exception.Response.StatusCode.value__
+            $statusDescription = $_.Exception.Response.StatusDescription
+            $tempResponse.Add("Message", "Problem with the PUT call")
             $tempResponse.Add("Query", $urlQueryPart)
             $tempResponse.Add("HttpStatus", $statusCode)
             $tempResponse.Add("HttpDescription", $statusDescription)
