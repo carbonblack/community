@@ -93,6 +93,7 @@ class CBEPFile{
 
     # Parameters required:  $fileCatalogId - this is the ID of a file in the catalog
     #                       $computerId - this is the ID of a computer that the file is on
+    #                       $session - this is a session object from the CBEPSession class
     # This method will modify the variable to mark a local file as approved
     [void] GrantLocal ([string]$fileInstanceId, [system.object]$session){
         ($this.fileInstance | Where-Object {$_.id -eq $fileInstanceId}).localState = 2
@@ -101,6 +102,7 @@ class CBEPFile{
 
     # Parameters required:  $fileCatalogId - this is the ID of a file in the catalog
     #                       $computerId - this is the ID of a computer that the file is on
+    #                       $session - this is a session object from the CBEPSession class
     # This method will modify the variable to mark a local file as unapproved
     [void] RevokeLocal ([string]$fileInstanceId, [system.object]$session){
         ($this.fileInstance | Where-Object {$_.id -eq $fileInstanceId}).localState = 1
@@ -109,6 +111,7 @@ class CBEPFile{
 
     # Parameters required:  $fileCatalogId - this is the ID of a file in the catalog
     #                       $computerId - this is the ID of a computer that the file is on
+    #                       $session - this is a session object from the CBEPSession class
     # This method will modify the variable to mark a local file as banned
     [void] BlockLocal ([string]$fileInstanceId, [system.object]$session){
         ($this.fileInstance | Where-Object {$_.id -eq $fileInstanceId}).localState = 3
@@ -116,6 +119,7 @@ class CBEPFile{
     }
 
     # Parameters required:  $fileCatalogId - this is the ID of a file in the catalog
+    #                       $session - this is a session object from the CBEPSession class
     # This method will modify the variable to mark a global file as approved
     [void] GrantGlobal ([string]$fileCatalogId, [system.object]$session){
         ($this.fileCatalog | Where-Object {$_.id -eq $fileCatalogId}).fileState = 2
@@ -123,6 +127,7 @@ class CBEPFile{
     }
 
     # Parameters required:  $fileCatalogId - this is the ID of a file in the catalog
+    #                       $session - this is a session object from the CBEPSession class
     # This method will modify the variable to mark a global file as unapproved
     [void] RevokeGlobal ([string]$fileCatalogId, [system.object]$session){
         ($this.fileCatalog | Where-Object {$_.id -eq $fileCatalogId}).fileState = 1
@@ -130,6 +135,7 @@ class CBEPFile{
     }
 
     # Parameters required:  $fileCatalogId - this is the ID of a file in the catalog
+    #                       $session - this is a session object from the CBEPSession class
     # This method will modify the variable to mark a global file as banned
     [void] BlockGlobal ([string]$fileCatalogId, [system.object]$session){
         ($this.fileCatalog | Where-Object {$_.id -eq $fileCatalogId}).fileState = 3

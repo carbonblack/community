@@ -20,15 +20,15 @@ class CBEPPublisher{
     #                       $publisherName - the name of the publisher
     #                       $session - this is a session object from the CBEPSession class
     # This method will use an open session to ask for a get query on the api
-    [system.object] Get ([string]$publisherName, [string]$publisherId, [system.object]$session){
+    [void] Get ([string]$publisherName, [string]$publisherId, [system.object]$session){
         If ($publisherName){
-            $urlQueryPart = "/Publisher?q=name:*" + $publisherName + "*"
+            $urlQueryPart = "/Publisher?q=name:" + $publisherName
         }
         ElseIf ($publisherId){
             $urlQueryPart = "/Publisher?q=id:" + $publisherId
         }
         Else{
-            return $null
+            return
         }
         $tempPublisher = $session.get($urlQueryPart)
         If ($this.publisher){
@@ -41,7 +41,6 @@ class CBEPPublisher{
             }
         }
         $this.publisher += $tempPublisher
-        return $tempPublisher
     }
 
     # Parameters required:  $publisherId - Unique id of this publisher
@@ -62,6 +61,7 @@ class CBEPPublisher{
     }
 
     # Parameters required:  $publisherId - Unique id of this publisher
+    #                       $session - this is a session object from the CBEPSession class
     # This method will modify the variable to mark a global publisher as approved
     [void] Grant ([string]$publisherId, [system.object]$session){
         ($this.publisher | Where-Object {$_.id -eq $publisherId}).publisherState = 2
@@ -69,6 +69,7 @@ class CBEPPublisher{
     }
 
     # Parameters required:  $publisherId - Unique id of this publisher
+    #                       $session - this is a session object from the CBEPSession class
     # This method will modify the variable to mark a global publisher as unapproved
     [void] Revoke ([string]$publisherId, [system.object]$session){
         ($this.publisher | Where-Object {$_.id -eq $publisherId}).publisherState = 1
@@ -76,17 +77,26 @@ class CBEPPublisher{
     }
 
     # Parameters required:  $publisherId - this is the ID of a publisher in the catalog
+    #                       $session - this is a session object from the CBEPSession class
     # This method will modify the variable to mark a global publisher as banned
     [void] Block ([string]$publisherId, [system.object]$session){
         ($this.publisher | Where-Object {$_.id -eq $publisherId}).publisherState = 3
         $this.Update($publisherId, $session)
     }
 
-    [void] GrantTrust (){
-
+    # Parameters required:  $publisherId - this is the ID of a publisher in the catalog
+    #                       $session - this is a session object from the CBEPSession class
+    # This method will modify the variable to allow reputation based approvals.
+    [void] GrantTrust ([string]$publisherId, [system.object]$session){
+        ($this.publisher | Where-Object {$_.id -eq $publisherId}).reputationApprovalsEnabled = "True"
+        $this.Update($publisherId, $session)
     }
 
-    [void] RevokeTrust (){
-
+    # Parameters required:  $publisherId - this is the ID of a publisher in the catalog
+    #                       $session - this is a session object from the CBEPSession class
+    # This method will modify the variable to disallow reputation based approvals.
+    [void] RevokeTrust ([string]$publisherId, [system.object]$session){
+        ($this.publisher | Where-Object {$_.id -eq $publisherId}).reputationApprovalsEnabled = "False"
+        $this.Update($publisherId, $session)
     }
 }

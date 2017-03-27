@@ -16,6 +16,9 @@
 class VTAnalysis{
     [string]$apiKey
 
+    # Parameters required: none
+    # Returns: boolean - True or False depending on if the key has been stored
+    # This method will pull the api key from the config file. The script CBEPAPICreateConfigFile.ps1 must be run to create this.
     [boolean] Initialize (){
         try{
             $apiConfigTemp = ConvertFrom-Json "$(get-content $(Join-Path $env:localappdata "CBConfig\CBEPApiConfig.json"))"
@@ -38,12 +41,10 @@ class VTAnalysis{
             return $false
         }
     }
-    # Parameters required: none
-    # Returns: Object - The response code information from the test connection to the session
-    # This method will save the session information needed to access the api
-    # Check to make sure the config has been run
-    # This will pull in the json with the encrypted values, decrypt, and create a session from them
-    # It also clears up the memory from the decryption process
+
+    # Parameters required: $file - This is a valid path to a file that is accessible by the system.
+    # Returns: string - the SHA256 hash of the file given
+    # This method will take in a file and give back its' SHA256 hash
     [string] GetHash ([System.IO.FileInfo] $file){
         $hashType = 'sha256'
         $stream = $null
@@ -68,8 +69,10 @@ class VTAnalysis{
     }
 
     # Parameters required: none
-    # Parameters optional: $file - a file
-    #                      $hash - a hash of a file
+    # Parameters optional: $file - This is a valid path to a file that is accessible by the system.
+    #                      $hash - This is a SHA256 hash of a file
+    # Returns: Object - the response from VirusTotal
+    # This method will take in either a valid path to a file or a sha256 hash and return a report from VirusTotal
     [system.object] GetReport ([System.IO.FileInfo]$file, [String]$hash) {
         If ($file){
             $hash = $this.GetHash($file)
@@ -96,12 +99,16 @@ class VTAnalysis{
         return $responseObject
     }
 
+    # This is a method for internal use only by InvokeScan
     [system.text.encoding] GetBytes([String] $str) {
         $bytes = New-Object Byte[] ($str.Length * 2)
         $bytes = [System.Text.Encoding]::ASCII.GetBytes($str)
         return $bytes
     }
 
+    # Parameters required: $file - This is a valid path to a file that is accessible by the system.
+    # Returns: Object - the response from VirusTotal
+    # This method takes in a file and converts it to byte stream. It then uploads it to VirusTotal and gets back a response about the file.
     [system.object] InvokeScan ([System.IO.FileInfo] $file){
 
         If (!(Test-Path $file -pathtype Leaf)){

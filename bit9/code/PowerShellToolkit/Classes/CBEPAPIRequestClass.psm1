@@ -62,6 +62,7 @@ class CBEPRequest{
     }
 
     # Parameters required:  $requestID - this is the ID of an approval request
+    #                       $session - this is a session object from the CBEPSession class
     # This method will modify the variable to mark a request as opened
     # You will still need to call the update method before this is applied to the api
     [void] Open ([string]$requestID, [system.object]$session){
@@ -70,6 +71,7 @@ class CBEPRequest{
     }
 
     # Parameters required:  $requestID - this is the ID of an approval request
+    #                       $session - this is a session object from the CBEPSession class
     # This method will modify the variable to mark a request as closed
     # You will still need to call the update method before this is applied to the api
     [void] Close ([string]$requestID, [system.object]$session){
@@ -78,6 +80,7 @@ class CBEPRequest{
     }
 
     # Parameters required:  $requestID - this is the ID of an approval request
+    #                       $session - this is a session object from the CBEPSession class
     # This method will modify the variable to mark a request as approved
     # You will still need to call the update method before this is applied to the api
     [void] Grant ([string]$requestID, [system.object]$session){
@@ -86,6 +89,7 @@ class CBEPRequest{
     }
 
     # Parameters required:  $requestID - this is the ID of an approval request
+    #                       $session - this is a session object from the CBEPSession class
     # This method will modify the variable to mark a request as rejected
     # You will still need to call the update method before this is applied to the api
     [void] Block ([string]$requestID, [system.object]$session){
