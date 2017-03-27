@@ -46,7 +46,7 @@ $secureValue = @{
 $secureValue.url = $url | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString
 $secureValue.key = $key | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString
 If ($vtkey){
-    $secureValue.vtkey = $key | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString
+    $secureValue.vtkey = $vtkey | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString
 }
 
 Remove-Item -Path "$env:localappdata\CBConfig" -Force -ErrorAction Ignore
