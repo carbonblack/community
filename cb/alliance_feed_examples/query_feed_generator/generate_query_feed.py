@@ -8,6 +8,7 @@ import urllib
 import json
 import hashlib
 import argparse
+import traceback
 
 sys.path.insert(0, "../../")
 from cbfeeds.feed import CbReport
@@ -28,6 +29,7 @@ def get_queries(query_src, datatype):
                     print row['query']
                     queries.append(row)
         except Exception:
+            traceback.print_exc()
             sys.stderr.write("[-] Error! Could not open %s\n" % query_src)
             exit(0)
 
@@ -57,7 +59,7 @@ def build_reports(queries):
                 'query': [
                 {
                     'index_type': q['index_type'],
-                    'search_query': query_encoder(q['query'])
+                    'search_query': urllib.quote_plus(q['query'])
                 }
             ]
         },
