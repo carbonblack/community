@@ -59,7 +59,7 @@ def build_reports(queries):
                 'query': [
                 {
                     'index_type': q['index_type'],
-                    'search_query': urllib.quote_plus(q['query'])
+                    'search_query': query_encoder(q['query'])
                 }
             ]
         },

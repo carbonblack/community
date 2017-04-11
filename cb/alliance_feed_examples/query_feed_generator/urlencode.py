@@ -25,4 +25,4 @@ def query_encoder(query):
     if not is_query_complete(query):
         return "cb.urlver=1&q=" + urllib.quote(query)
     else:
-        return urllib.quote(options.query)
+        return urllib.quote_plus(options.query)
