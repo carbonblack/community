@@ -23,6 +23,6 @@ def query_encoder(query):
     # see CBAPI-7
 
     if not is_query_complete(query):
-        return "cb.urlver=1&q=" + urllib.quote(query)
+        return "cb.urlver=1&q=" + urllib.quote_plus(query)
     else:
-        return urllib.quote_plus(options.query)
+        return urllib.quote_plus(query)
