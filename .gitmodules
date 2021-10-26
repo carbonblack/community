@@ -7,6 +7,3 @@
 [submodule "cb/CarbonGraphiti"]
 	path = cb/CarbonGraphiti
 	url = https://github.com/droptables/CarbonGraphiti.git
-[submodule "cb/CIRTKit"]
-	path = cb/CIRTKit
-	url = https://github.com/byt3smith/CIRTKit.git
