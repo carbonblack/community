@@ -1,3 +1,5 @@
+This repository is now deprecated.  It is planned to be archived in June 2022.
+
 # community
 Community Sharing Repository for Carbon Black and Bit9 Platforms
 
